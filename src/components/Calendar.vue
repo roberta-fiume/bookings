@@ -2,10 +2,12 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-      <v-sheet height="64">
+      <v-sheet height="64" >
         <v-toolbar
           flat
         >
+         <v-btn color="primary" dark @click.stop="dialog = true">New Event</v-btn>
+         
           <v-btn
             outlined
             class="mr-4"
@@ -14,6 +16,7 @@
           >
             Today
           </v-btn>
+
           <v-btn
             fab
             text
@@ -64,9 +67,9 @@
               <v-list-item @click="type = 'week'">
                 <v-list-item-title>Week</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="type = 'month'">
+              <!-- <v-list-item @click="type = 'month'">
                 <v-list-item-title>Month</v-list-item-title>
-              </v-list-item>
+              </v-list-item> -->
               <v-list-item @click="type = '4day'">
                 <v-list-item-title>4 days</v-list-item-title>
               </v-list-item>
@@ -74,20 +77,72 @@
           </v-menu>
         </v-toolbar>
       </v-sheet>
+
+        <v-dialog v-model="dialog" max-width="500">
+            <v-card>
+                <v-container>
+                    <v-form @submit.prevent="addEvent">
+                        <v-text-field
+                            v-model="firstName"
+                            type="text"
+                            label="First name"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            v-model="lastName"
+                            type="text"
+                            label="Last name"
+                        >
+                        </v-text-field>
+                            <v-text-field
+                            v-model="email"
+                            type="text"
+                            label="Email"
+                        >
+                        </v-text-field>
+                
+                        <v-text-field
+                            v-model="bookingDate"
+                            type="date"
+                            label="Booking date"
+                        >
+                        </v-text-field>
+                        <v-btn
+                            type="submit"
+                            color="primary"
+                            class="mr-4"
+                            @click.stop="dialog = false"
+                        >
+                            Book slot
+                        </v-btn>
+                    </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
+
       <v-sheet height="600">
         <v-calendar
           ref="calendar"
           v-model="focus"
           color="primary"
-          :events="events"
-          :event-color="getEventColor"
           :type="type"
-          @click:event="showEvent"
-          @click:more="viewDay"
-          @click:date="viewDay"
-          @change="updateRange"
+          class="cal-sheet"
+          
         ></v-calendar>
-        <v-menu
+
+          <!-- <v-calendar
+            ref="calendar"
+            v-model="focus"
+            color="primary"
+            :events="events"
+            :event-color="getEventColor"
+            :type="type"
+            @click:event="showEvent"
+            @click:more="viewDay"
+            @click:date="viewDay"
+            @change="updateRange"
+        ></v-calendar> -->
+        <!-- <v-menu
           v-model="selectedOpen"
           :close-on-content-click="false"
           :activator="selectedElement"
@@ -127,7 +182,7 @@
               </v-btn>
             </v-card-actions>
           </v-card>
-        </v-menu>
+        </v-menu> -->
       </v-sheet>
     </v-col>
   </v-row>
@@ -137,19 +192,24 @@
   export default {
     data: () => ({
       focus: '',
-      type: 'month',
+      type: 'week',
       typeToLabel: {
         week: 'Week',
         month: 'Month',  
         day: 'Day',
         '4day': '4 Days',
       },
-      selectedEvent: {},
-      selectedElement: null,
-      selectedOpen: false,
-      events: [],
-      colors: ['red'],
-      names: ['Booked'],
+    //   selectedEvent: {},
+    //   selectedElement: null,
+    //   selectedOpen: false,
+    //   events: [],
+      colors: ['red', 'green'],
+      names: ['Booked', 'Available'],
+      dialog: false,
+      firstName: null,
+      lastName: null,
+      email: null,
+      bookingDate: null,
     }),
     mounted () {
       this.$refs.calendar.checkChange()
@@ -171,53 +231,63 @@
       next () {
         this.$refs.calendar.next()
       },
-      showEvent ({ nativeEvent, event }) {
-        const open = () => {
-          this.selectedEvent = event
-          this.selectedElement = nativeEvent.target
-          setTimeout(() => {
-            this.selectedOpen = true
-          }, 10)
-        }
+    //   openForm(){
 
-        if (this.selectedOpen) {
-          this.selectedOpen = false
-          setTimeout(open, 10)
-        } else {
-          open()
-        }
+    //   }, 
 
-        nativeEvent.stopPropagation()
-      },
-      updateRange ({ start, end }) {
-        const events = []
+        //   showEvent ({ nativeEvent, event }) {
+        //     const open = () => {
+        //       this.selectedEvent = event
+        //       this.selectedElement = nativeEvent.target
+        //       setTimeout(() => {
+        //         this.selectedOpen = true
+        //       }, 10)
+        //     }
 
-        const min = new Date(`${start.date}T00:00:00`)
-        const max = new Date(`${end.date}T23:59:59`)
-        const days = (max.getTime() - min.getTime()) / 86400000
-        const eventCount = this.rnd(days, days + 20)
+        //     if (this.selectedOpen) {
+        //       this.selectedOpen = false
+        //       setTimeout(open, 10)
+        //     } else {
+        //       open()
+        //     }
 
-        for (let i = 0; i < eventCount; i++) {
-          const allDay = this.rnd(0, 3) === 0
-          const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-          const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-          const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-          const second = new Date(first.getTime() + secondTimestamp)
+        //     nativeEvent.stopPropagation()
+        //   },
+        //   updateRange ({ start, end }) {
+        //     const events = []
 
-          events.push({
-            name: this.names[this.rnd(0, this.names.length - 1)],
-            start: first,
-            end: second,
-            color: this.colors[this.rnd(0, this.colors.length - 1)],
-            timed: !allDay,
-          })
-        }
+        //     const min = new Date(`${start.date}T00:00:00`)
+        //     const max = new Date(`${end.date}T23:59:59`)
+        //     const days = (max.getTime() - min.getTime()) / 86400000
+        //     const eventCount = this.rnd(days, days + 20)
 
-        this.events = events
-      },
-      rnd (a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a
-      },
+        //     for (let i = 0; i < eventCount; i++) {
+        //       const allDay = this.rnd(0, 3) === 0
+        //       const firstTimestamp = this.rnd(min.getTime(), max.getTime())
+        //       const first = new Date(firstTimestamp - (firstTimestamp % 900000))
+        //       const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
+        //       const second = new Date(first.getTime() + secondTimestamp)
+
+        //       events.push({
+        //         name: this.names[this.rnd(0, this.names.length - 1)],
+        //         start: first,
+        //         end: second,
+        //         color: this.colors[this.rnd(0, this.colors.length -1)],
+        //         timed: !allDay,
+        //       })
+        //     }
+
+        //     this.events = events
+        //   },
+        //   rnd (a, b) {
+        //     return Math.floor((b - a + 1) * Math.random()) + a
+        //   },
     },
   }
 </script>
+
+<style lang="scss" scoped>
+    .cal-sheet {
+        cursor: pointer;
+    }
+</style>

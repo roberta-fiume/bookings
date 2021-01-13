@@ -4,9 +4,7 @@
       <v-sheet height="64" >
         <v-toolbar
           flat
-        >
-         <v-btn color="primary" dark >New Event</v-btn>
-         
+        >  
           <v-btn
             outlined
             class="mr-4"
@@ -126,8 +124,6 @@
           color="primary"
           :type="type"
           class="v-calendar v-calendar-daily"
-          
-          
         ></v-calendar>
 
           <!-- <v-calendar
@@ -214,12 +210,28 @@
     }),
     mounted () {
       this.$refs.calendar.checkChange();
-      let squares = document.getElementsByClassName("v-calendar-daily__day-interval");
-         squares.forEach(square => {
-             square.innerHTML = "AVAILABLE";
-         })
+      this.createAvailability();
+      this.editTime();     
     },
     methods: {
+      createAvailability() {
+        let squares = document.getElementsByClassName("v-calendar-daily__day-interval");
+        squares.forEach(square => {
+             square.innerHTML = "AVAILABLE";
+        });
+      },
+
+      editTime() {
+        let times = document.getElementsByClassName("v-calendar-daily__interval-text");
+        times[1].innerHTML = "6.00 - 8.00";
+        times[2].innerHTML = "8.00 - 10.00";
+        times[3].innerHTML = "10.00 - 12.00";
+        times[4].innerHTML = "12.00 - 14.00";
+        times[5].innerHTML = "15.00 - 17.00";
+        times[6].innerHTML = "17.00 - 19.00";
+        times[7].innerHTML = "19.00 - 21.00";
+        times[8].innerHTML = "21.00 - 23.00";
+      },
       viewDay ({ date }) {
         this.focus = date
         this.type = 'day'

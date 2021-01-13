@@ -1,4 +1,3 @@
-
 <template>
   <v-row class="fill-height">
     <v-col>
@@ -6,7 +5,7 @@
         <v-toolbar
           flat
         >
-         <v-btn color="primary" dark @click.stop="dialog = true">New Event</v-btn>
+         <v-btn color="primary" dark >New Event</v-btn>
          
           <v-btn
             outlined
@@ -120,13 +119,14 @@
             </v-card>
         </v-dialog>
 
-      <v-sheet height="600">
+      <v-sheet height="600" @click="openModal" >
         <v-calendar
           ref="calendar"
           v-model="focus"
           color="primary"
           :type="type"
-          class="cal-sheet"
+          class="v-calendar v-calendar-daily"
+          
           
         ></v-calendar>
 
@@ -189,6 +189,7 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
   export default {
     data: () => ({
       focus: '',
@@ -212,7 +213,11 @@
       bookingDate: null,
     }),
     mounted () {
-      this.$refs.calendar.checkChange()
+      this.$refs.calendar.checkChange();
+      let squares = document.getElementsByClassName("v-calendar-daily__day-interval");
+         squares.forEach(square => {
+             square.innerHTML = "AVAILABLE";
+         })
     },
     methods: {
       viewDay ({ date }) {
@@ -231,9 +236,10 @@
       next () {
         this.$refs.calendar.next()
       },
-    //   openForm(){
-
-    //   }, 
+      openModal(){
+        this.dialog = true;
+        let squares = document.getElementsByClassName("v-calendar");
+      }, 
 
         //   showEvent ({ nativeEvent, event }) {
         //     const open = () => {
@@ -283,11 +289,14 @@
         //     return Math.floor((b - a + 1) * Math.random()) + a
         //   },
     },
+
+  
   }
 </script>
 
-<style lang="scss" scoped>
-    .cal-sheet {
-        cursor: pointer;
+<style lang="scss">
+    .v-calendar-daily {
+        cursor: pointer; 
     }
+
 </style>

@@ -211,7 +211,8 @@
     mounted () {
       this.$refs.calendar.checkChange();
       this.createAvailability();
-      this.editTime();     
+      this.editTime();  
+      this.removeUnnacessaryTimes();   
     },
     methods: {
       createAvailability() {
@@ -222,6 +223,7 @@
       },
 
       editTime() {
+          //TODO: make is configurable from API in bbackend      
         let times = document.getElementsByClassName("v-calendar-daily__interval-text");
         times[1].innerHTML = "6.00 - 8.00";
         times[2].innerHTML = "8.00 - 10.00";
@@ -231,6 +233,14 @@
         times[6].innerHTML = "17.00 - 19.00";
         times[7].innerHTML = "19.00 - 21.00";
         times[8].innerHTML = "21.00 - 23.00";
+      },
+
+      removeUnnacessaryTimes() {
+        let times = document.getElementsByClassName("v-calendar-daily__interval"); 
+        for(var i = times.length -1; i >= 9; i--){
+            times[i].parentNode.removeChild(times[i]);
+        }
+           
       },
       viewDay ({ date }) {
         this.focus = date

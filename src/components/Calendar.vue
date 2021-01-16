@@ -36,8 +36,8 @@
               mdi-chevron-right
             </v-icon>
           </v-btn>
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
+          <v-toolbar-title v-if="title">
+              {{ title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu
@@ -95,13 +95,6 @@
                             v-model="email"
                             type="text"
                             label="Email"
-                        >
-                        </v-text-field>
-                
-                        <v-text-field
-                            v-model="bookingDate"
-                            type="date"
-                            label="Booking date"
                         >
                         </v-text-field>
                         <v-btn
@@ -181,39 +174,51 @@
         </v-menu> -->
       </v-sheet>
     </v-col>
+  
   </v-row>
+
+
 </template>
 
 <script>
+
 /* eslint-disable no-unused-vars */
   export default {
-    data: () => ({
-      focus: '',
-      type: 'week',
-      typeToLabel: {
+    data() {
+    
+      return {
+        title: null,
+        focus: '',
+        type: 'week',
+        typeToLabel: {
         week: 'Week',
         month: 'Month',  
         day: 'Day',
-        '4day': '4 Days',
-      },
-    //   selectedEvent: {},
-    //   selectedElement: null,
-    //   selectedOpen: false,
-    //   events: [],
-      colors: ['red', 'green'],
-      names: ['Booked', 'Available'],
-      dialog: false,
-      firstName: null,
-      lastName: null,
-      email: null,
-      bookingDate: null,
-    }),
-    mounted () {
+        '4day': '4 Days'
+        },
+        //   selectedEvent: {},
+        //   selectedElement: null,
+        //   selectedOpen: false,
+        //   events: [],
+        colors: ['red', 'green'],
+        names: ['Booked', 'Available'],
+        dialog: false,
+        firstName: null,
+        lastName: null,
+        email: null,
+        bookingDate: null,
+      }
+    },
+    mounted() {
       this.$refs.calendar.checkChange();
       this.createAvailability();
       this.editTime();  
-      this.removeUnnacessaryTimes();   
+      this.removeUnnacessaryTimes();  
+      this.title = this.$refs.calendar.title;
+      console.log("TITLE IN MOUNTED", this.title);
+      // this.removeSquares();
     },
+
     methods: {
       createAvailability() {
         let squares = document.getElementsByClassName("v-calendar-daily__day-interval");
@@ -225,23 +230,41 @@
       editTime() {
           //TODO: make is configurable from API in bbackend      
         let times = document.getElementsByClassName("v-calendar-daily__interval-text");
-        times[1].innerHTML = "6.00 - 8.00";
-        times[2].innerHTML = "8.00 - 10.00";
-        times[3].innerHTML = "10.00 - 12.00";
-        times[4].innerHTML = "12.00 - 14.00";
-        times[5].innerHTML = "15.00 - 17.00";
-        times[6].innerHTML = "17.00 - 19.00";
-        times[7].innerHTML = "19.00 - 21.00";
-        times[8].innerHTML = "21.00 - 23.00";
+        times[0].innerHTML = "6.00 - 8.00";
+        times[1].innerHTML = "8.00 - 10.00";
+        times[2].innerHTML = "10.00 - 12.00";
+        times[3].innerHTML = "12.00 - 14.00";
+        times[4].innerHTML = "15.00 - 17.00";
+        times[5].innerHTML = "17.00 - 19.00";
+        times[6].innerHTML = "19.00 - 21.00";
+        times[7].innerHTML = "21.00 - 23.00";
       },
 
       removeUnnacessaryTimes() {
         let times = document.getElementsByClassName("v-calendar-daily__interval"); 
-        for(var i = times.length -1; i >= 9; i--){
+        for(var i = times.length -1; i >= 8; i--) {
             times[i].parentNode.removeChild(times[i]);
         }
-           
       },
+
+      // removeSquares() {
+      //   let squares = document.getElementsByClassName("v-calendar-daily__day-interval"); 
+      //   // for(var i = squares.length -1; i >= 9; i--) {
+      //   //     squares[i].parentNode.removeChild(squares[i]);
+      //   // } 
+      // },
+
+      // bookSlot() {
+      //   let user = {
+      //     firstName: this.firstName,
+      //     lastName: this.lastName,
+      //     email: this.email,
+      //   }
+      // },
+
+      // getBookingDateTime() {
+
+      // },
       viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
@@ -310,7 +333,7 @@
         //   rnd (a, b) {
         //     return Math.floor((b - a + 1) * Math.random()) + a
         //   },
-    },
+    }
 
   
   }
@@ -319,6 +342,14 @@
 <style lang="scss">
     .v-calendar-daily {
         cursor: pointer; 
+    }
+
+    .v-calendar-daily__day-interval {
+      color: green;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
 </style>

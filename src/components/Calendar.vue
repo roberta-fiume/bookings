@@ -76,36 +76,30 @@
       </v-sheet>
 
         <v-dialog v-model="dialog" max-width="500">
-            <v-card>
-                <v-container>
-                    <v-form @submit.prevent="addEvent">
-                        <v-text-field
-                            v-model="firstName"
-                            type="text"
-                            label="First name"
-                        >
-                        </v-text-field>
-                        <v-text-field
-                            v-model="lastName"
-                            type="text"
-                            label="Last name"
-                        >
-                        </v-text-field>
-                            <v-text-field
-                            v-model="email"
-                            type="text"
-                            label="Email"
-                        >
-                        </v-text-field>
-                        <v-btn
-                            type="submit"
-                            color="primary"
-                            class="mr-4"
-                            @click.stop="dialog = false"
-                        >
-                            Book slot
-                        </v-btn>
-                    </v-form>
+            <v-card height="200">
+                <v-container class="d-flex flex-column align-center">
+                  <div class="mb-8 mt-10"> Your delivery is booked! </div> 
+
+                  <div class="d-flex">
+                     <v-btn
+                        type="submit"
+                        color="primary"
+                        class="mr-4"
+                        @click.stop="dialog = false"
+                    >
+                        Cancel delivery
+                    </v-btn>
+
+                    <v-btn
+                        type="submit"
+                        color="primary"
+                        class="mr-4"
+                        @click.stop="dialog = false"
+                    >
+                        Back
+                    </v-btn>
+                  </div>
+                   
                 </v-container>
             </v-card>
         </v-dialog>
@@ -116,8 +110,10 @@
           v-model="focus"
           color="primary"
           :type="type"
-          class="v-calendar v-calendar-daily"
-        ></v-calendar>
+
+        >
+        </v-calendar>
+
 
           <!-- <v-calendar
             ref="calendar"
@@ -206,7 +202,8 @@
         firstName: null,
         lastName: null,
         email: null,
-        bookingDate: null,
+        date: null,
+        color: true,
       }
     },
     mounted() {
@@ -215,10 +212,16 @@
       this.editTime();  
       this.removeUnnacessaryTimes();  
       this.title = this.$refs.calendar.title;
-      console.log("TITLE IN MOUNTED", this.title);
+      this.date = this.$refs.calendar.times.today.day;
+      console.log("TITLE IN MOUNTED", this.$refs.calendar);
       // this.removeSquares();
+    
+      this.disablePastDates();
     },
 
+    computed: {
+  
+    },
     methods: {
       createAvailability() {
         let squares = document.getElementsByClassName("v-calendar-daily__day-interval");
@@ -228,7 +231,7 @@
       },
 
       editTime() {
-          //TODO: make is configurable from API in bbackend      
+          //TODO: make is configurable from API in backend      
         let times = document.getElementsByClassName("v-calendar-daily__interval-text");
         times[0].innerHTML = "6.00 - 8.00";
         times[1].innerHTML = "8.00 - 10.00";
@@ -254,20 +257,35 @@
       //   // } 
       // },
 
-      // bookSlot() {
-      //   let user = {
-      //     firstName: this.firstName,
-      //     lastName: this.lastName,
-      //     email: this.email,
-      //   }
-      // },
+      bookSlot() {
+        // to do after implementing login in backend => before doing the login, it needs to be done the registration!
+        // let user = {
+        //   firstName: this.firstName,
+        //   lastName: this.lastName,
+        //   email: this.email,
+        // }
+      },
 
-      // getBookingDateTime() {
+      disablePastDates() {
+        var date = this.$refs.calendar.times.today.day;
+        let squares = document.getElementsByClassName("v-calendar-daily_head-day");
+        squares.forEach(day => { 
+          let childrenInSquare = day.children;
+          childrenInSquare[1].childNodes.forEach(child => {
+            let span = child.children;
+            span.forEach(span => {
+            let parsedNumbers = parseInt(span.innerHTML);
+            if (parsedNumbers < date) {
+              childrenInSquare[1].parentNode.classList.add("grey-theme");
+            }
+            })
+          })
+        })
+      },
 
-      // },
       viewDay ({ date }) {
-        this.focus = date
-        this.type = 'day'
+        this.focus = date;
+        this.type = 'day';
       },
       getEventColor (event) {
         return event.color
@@ -283,7 +301,7 @@
       },
       openModal(){
         this.dialog = true;
-        let squares = document.getElementsByClassName("v-calendar");
+     
       }, 
 
         //   showEvent ({ nativeEvent, event }) {
@@ -350,6 +368,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+
+    .grey-theme {
+      background-color: lightgrey;
+      cursor: none;
+      
+
     }
 
 </style>

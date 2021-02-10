@@ -1,3 +1,4 @@
+
 <template>
   <div class='demo-app'>
     <div class='demo-app-sidebar'>
@@ -20,11 +21,10 @@
         </label>
       </div>
       <div class='demo-app-sidebar-section'>
-        <h2>All Events ({{ currentEvents.length }})</h2>
         <ul>
           <li v-for='event in currentEvents' :key='event.id'>
             <b>{{ event.startStr }}</b>
-            <i>{{ event.title }}</i>
+            <i>{{ bookingSlot }}</i>
           </li>
         </ul>
       </div>
@@ -36,7 +36,8 @@
       >
         <template v-slot:eventContent='arg'>
           <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i>
+          <!-- <i>{{ arg.event.title }}</i> -->
+          <i> {{ bookingSlot}} </i>
         </template>
       </FullCalendar>
     </div>
@@ -44,6 +45,7 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars*/ 
 import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -85,8 +87,13 @@ export default {
         eventRemove:
         */
       },
-      currentEvents: []
+      currentEvents: [],
+      bookingSlot: null,
     }
+  },
+
+  created() {
+      console.log("event",INITIAL_EVENTS)
   },
 
   methods: {
@@ -96,24 +103,32 @@ export default {
     },
 
     handleDateSelect(selectInfo) {
-      let title = prompt('Please enter a new title for your event')
+      let title = confirm('Booking confirmed!');
       let calendarApi = selectInfo.view.calendar
+
+      this.bookingSlot = "Booked";
+
+
 
       calendarApi.unselect() // clear date selection
 
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        })
-      }
+          if (title) {
+            calendarApi.addEvent({
+              id: createEventId(),
+                //   title: "Booked!",
+              start: selectInfo.startStr,
+              end: selectInfo.endStr,
+              allDay: selectInfo.allDay
+            })
+          }
     },
 
     handleEventClick(clickInfo) {
+        console.log("THIS IS EVENT CLICK", this.eventClick);
+        
       if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+          console.log("THIS IS THE EVENT TITLE", clickInfo);
+          console.log("THIS IS EVENT CLICK", this.eventClick);
         clickInfo.event.remove()
       }
     },

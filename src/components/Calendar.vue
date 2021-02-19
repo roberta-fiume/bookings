@@ -19,8 +19,10 @@
           />
           toggle weekends
         </label>
+ 
       </div>
       <div class='demo-app-sidebar-section'>
+        <h1>My orders</h1>
         <ul>
           <li v-for='event in currentEvents' :key='event.id'>
             <b>{{ event.startStr }}</b>
@@ -51,6 +53,8 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { INITIAL_EVENTS, createEventId } from '../event-utils'
+
+const axios = require('axios');
 
 export default {
 
@@ -93,7 +97,7 @@ export default {
   },
 
   created() {
-      console.log("event",INITIAL_EVENTS)
+   console.log("PLUGIN", )
   },
 
   methods: {
@@ -104,12 +108,8 @@ export default {
 
     handleDateSelect(selectInfo) {
       let title = confirm('Booking confirmed!');
-      let calendarApi = selectInfo.view.calendar
-
+      let calendarApi = selectInfo.view.calendar;
       this.bookingSlot = "Booked";
-
-
-
       calendarApi.unselect() // clear date selection
 
           if (title) {
@@ -121,14 +121,28 @@ export default {
               allDay: selectInfo.allDay
             })
           }
+
+      this.createUser();
     },
 
-    handleEventClick(clickInfo) {
-        console.log("THIS IS EVENT CLICK", this.eventClick);
-        
+    createUser() {
+      let user = "user";
+      const postPromise = axios.post(`https://booking-ms-dot-roberta-dev.nw.r.appspot.com/${user}`, {
+        user_id: '56453',
+        date: new Date()
+      });
+      postPromise.then((response) => {
+        console.log(" this is the response",response);
+      })
+      .catch(error => {
+        console.log("this is the error",error);
+      });
+
+      return postPromise;
+    },
+
+    handleEventClick(clickInfo) {      
       if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-          console.log("THIS IS THE EVENT TITLE", clickInfo);
-          console.log("THIS IS EVENT CLICK", this.eventClick);
         clickInfo.event.remove()
       }
     },

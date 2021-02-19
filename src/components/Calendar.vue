@@ -73,9 +73,9 @@ export default {
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          right: 'timeGridWeek'
         },
-        initialView: 'dayGridMonth',
+        initialView: 'timeGridWeek',
         initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
         editable: true,
         selectable: true,
@@ -94,10 +94,6 @@ export default {
       currentEvents: [],
       bookingSlot: null,
     }
-  },
-
-  created() {
-   console.log("PLUGIN", )
   },
 
   methods: {
@@ -125,10 +121,17 @@ export default {
       this.createUser();
     },
 
+    createUserId() {
+      let userId = Math.floor((Math.random() * 90000) + 10000);
+
+      return userId
+    },
+
     createUser() {
+      let userId = this.createUserId();
       let user = "user";
       const postPromise = axios.post(`https://booking-ms-dot-roberta-dev.nw.r.appspot.com/${user}`, {
-        user_id: '56453',
+        user_id: userId,
         date: new Date()
       });
       postPromise.then((response) => {

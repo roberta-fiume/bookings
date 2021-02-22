@@ -38,7 +38,7 @@
       >
         <template v-slot:eventContent='arg'>
           <b>{{ arg.timeText }}</b>
-          <!-- <i>{{ arg.event.title }}</i> -->
+          <i>{{ arg.event.title }}</i>
           <i> {{ bookingSlot}} </i>
         </template>
       </FullCalendar>
@@ -76,12 +76,17 @@ export default {
           right: 'timeGridWeek'
         },
         initialView: 'timeGridWeek',
-        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+        // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+        events: [],
+        //   { title: 'event 1', date: '2021-02-24T10:00' },
+        //   { title: 'event 2', date: '2021-02-25' }
+        // ],
         editable: true,
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
         weekends: true,
+
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents
@@ -96,6 +101,10 @@ export default {
     }
   },
 
+  created() {
+     this.initiCalendar(INITIAL_EVENTS);
+  },
+
   methods: {
 
     handleWeekendsToggle() {
@@ -103,6 +112,7 @@ export default {
     },
 
     handleDateSelect(selectInfo) {
+      console.log("Select info", selectInfo);
       let title = confirm('Booking confirmed!');
       let calendarApi = selectInfo.view.calendar;
       this.bookingSlot = "Booked";
@@ -118,21 +128,42 @@ export default {
             })
           }
 
-      this.createUser();
+      this.createBooking(selectInfo);
     },
 
-    createUserId() {
-      let userId = Math.floor((Math.random() * 90000) + 10000);
-
-      return userId
+    initiCalendar() {
+      this.getBookings();
     },
 
-    createUser() {
-      let userId = this.createUserId();
+    getBookings() {
+      let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com"
+      axios.get(url).then(response => {
+        let bookings = response.data;
+        let apiEvents = bookings.map(booking => this.bookingToEvent(booking));
+        this.calendarOptions.events = [... apiEvents];
+      })
+    },
+
+    bookingToEvent(booking) { //factory function 
+      let event = {
+        id: booking.id,
+        title: "Booked",
+        start: booking.date,
+        allDay: false,
+      };
+      return event;
+    },
+
+    createBookingId() {
+      return Math.floor((Math.random() * 90000) + 10000);
+    },
+
+    createBooking(selectInfo) {
+      let userId = this.createBookingId();
       let user = "user";
       const postPromise = axios.post(`https://booking-ms-dot-roberta-dev.nw.r.appspot.com/${user}`, {
         user_id: userId,
-        date: new Date()
+        date: selectInfo.start
       });
       postPromise.then((response) => {
         console.log(" this is the response",response);
@@ -152,6 +183,7 @@ export default {
     },
 
     handleEvents(events) {
+      console.log("eventsSet", events);
       this.currentEvents = events
     }
   }

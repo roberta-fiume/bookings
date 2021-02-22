@@ -1,7 +1,16 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <p>this is a try</p>
+    <h1> Welcome to Markedona</h1>
+    <v-btn>
+     
+     <span class="material-icons">
+        account_circle
+     </span>
+       My Account 
+    </v-btn>
+    <v-btn>
+      <router-link to="/bookslot" > Book delivery </router-link>
+    </v-btn>
 
   </div>
 </template>
@@ -14,6 +23,12 @@ export default {
   name: 'Home',
   components: {
 
+  },
+
+  data() {
+    return {
+
+    }
   }
 }
 </script>

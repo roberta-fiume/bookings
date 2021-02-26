@@ -1,4 +1,3 @@
-
 <template>
   <div class='demo-app'>
     <div class='demo-app-sidebar'>
@@ -32,6 +31,9 @@
       </div>
     </div>
     <div class='demo-app-main'>
+      <v-btn>
+          <router-link to="/"> Home </router-link>
+      </v-btn>
       <FullCalendar
         class='demo-app-calendar'
         :options='calendarOptions'
@@ -55,6 +57,8 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { INITIAL_EVENTS, createEventId } from '../event-utils'
 
 const axios = require('axios');
+
+const url = "http://localhost:8080"
 
 export default {
 
@@ -103,6 +107,7 @@ export default {
 
   created() {
      this.initiCalendar(INITIAL_EVENTS);
+     this.url = url 
   },
 
   methods: {
@@ -136,12 +141,17 @@ export default {
     },
 
     getBookings() {
-      let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com"
+      
+      // let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com"
       axios.get(url).then(response => {
         let bookings = response.data;
         let apiEvents = bookings.map(booking => this.bookingToEvent(booking));
         this.calendarOptions.events = [... apiEvents];
       })
+      .catch(error => {
+        console.log("this is the error",error);
+      });
+
     },
 
     bookingToEvent(booking) { //factory function 
@@ -161,7 +171,7 @@ export default {
     createBooking(selectInfo) {
       let userId = this.createBookingId();
       let user = "user";
-      const postPromise = axios.post(`https://booking-ms-dot-roberta-dev.nw.r.appspot.com/${user}`, {
+      const postPromise = axios.post(`${url}/${user}`, {
         user_id: userId,
         date: selectInfo.start
       });
@@ -175,10 +185,18 @@ export default {
       return postPromise;
     },
 
-    handleEventClick(clickInfo) {      
+    handleEventClick(clickInfo) { 
+      console.log("THIS IS CLICK INFO", clickInfo); 
+      let user = "user";   
+      let id = clickInfo.id ;
       if (confirm(`Are you sure you want to cancel this delivery?`)) {
         clickInfo.event.remove();
-        
+        axios.delete(`${url}/${user}/${id}`).then(response => {
+          console.log(" this is the response",response);
+        })
+        .catch(error => {
+        console.log("this is the error",error);
+      });
       }
     },
 

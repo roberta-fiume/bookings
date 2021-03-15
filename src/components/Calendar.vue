@@ -141,7 +141,6 @@ export default {
     },
 
     getBookings() {
-      
       // let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com"
       axios.get(url).then(response => {
         let bookings = response.data;
@@ -170,8 +169,8 @@ export default {
 
     createBooking(selectInfo) {
       let userId = this.createBookingId();
-      let user = "user";
-      const postPromise = axios.post(`${url}/${user}`, {
+      let booking = "booking";
+      const postPromise = axios.post(`${url}/${booking}`, {
         user_id: userId,
         date: selectInfo.start
       });
@@ -187,17 +186,17 @@ export default {
 
     handleEventClick(clickInfo) { 
       console.log("THIS IS CLICK INFO", clickInfo); 
-      let user = "user";   
+      let booking = "booking";   
       let id = clickInfo.id ;
       if (confirm(`Are you sure you want to cancel this delivery?`)) {
         clickInfo.event.remove();
-        axios.delete(`${url}/${user}/${id}`).then(response => {
+      }
+      axios.delete(`${url}/${booking}/${id}`).then(response => {
           console.log(" this is the response",response);
         })
         .catch(error => {
         console.log("this is the error",error);
       });
-      }
     },
 
     handleEvents(events) {

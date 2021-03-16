@@ -58,7 +58,15 @@ import { INITIAL_EVENTS, createEventId } from '../event-utils'
 
 const axios = require('axios');
 
-const url = "http://localhost:8080"
+const url = 'http://localhost:8080';
+
+const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTU4ODc5NTgsImV4cCI6MTYxNTk3NDM1OCwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.CDowI-G60LZpMj71FT-dbr9v8nfIIgR15s7dm3gCEMxTCC9c95HbTxIuBiCDWMeexaaKyMVhSsARoHVgCJ0g4pztOL4G-I6bVjqCp6jhiKnOAKs791h9x_xN13PhOlWOiZy4BK1ppAyQ1cJRRUTPuMSOLgGGyJUAGJhcBRmKvNpYIJdsejKXQm90fKfZJFbDYkYiGTQWvgU48wWFIlrVNxxgDDHLoD5oai8f5EMPQCUmFNkkl4r9V8bWt6WwKKD_jM59YaeVbBlW90twlZNqvtAcXufyzXhi9R6XTcN9HEIkBIWtu2ksQjjg3WYZV0e-dVex1--lvVqxdaKupAHWyw';
+
+const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ token
+      }
+
 
 export default {
 
@@ -108,7 +116,9 @@ export default {
   created() {
     // this.passToken();
      this.initiCalendar(INITIAL_EVENTS);
-     this.url = url 
+     this.url = url;
+     this.token = token;
+     this.headers = headers;
   },
 
   methods: {
@@ -143,11 +153,6 @@ export default {
 
     getBookings() {
       // let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com",
-      let token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTU4ODc5NTgsImV4cCI6MTYxNTk3NDM1OCwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.CDowI-G60LZpMj71FT-dbr9v8nfIIgR15s7dm3gCEMxTCC9c95HbTxIuBiCDWMeexaaKyMVhSsARoHVgCJ0g4pztOL4G-I6bVjqCp6jhiKnOAKs791h9x_xN13PhOlWOiZy4BK1ppAyQ1cJRRUTPuMSOLgGGyJUAGJhcBRmKvNpYIJdsejKXQm90fKfZJFbDYkYiGTQWvgU48wWFIlrVNxxgDDHLoD5oai8f5EMPQCUmFNkkl4r9V8bWt6WwKKD_jM59YaeVbBlW90twlZNqvtAcXufyzXhi9R6XTcN9HEIkBIWtu2ksQjjg3WYZV0e-dVex1--lvVqxdaKupAHWyw";
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+ token
-      };
       axios.get(url, {
         headers: headers
       }).then(response => {
@@ -177,11 +182,6 @@ export default {
     },
 
     createBooking(selectInfo) {
-      let token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTU4ODc5NTgsImV4cCI6MTYxNTk3NDM1OCwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.CDowI-G60LZpMj71FT-dbr9v8nfIIgR15s7dm3gCEMxTCC9c95HbTxIuBiCDWMeexaaKyMVhSsARoHVgCJ0g4pztOL4G-I6bVjqCp6jhiKnOAKs791h9x_xN13PhOlWOiZy4BK1ppAyQ1cJRRUTPuMSOLgGGyJUAGJhcBRmKvNpYIJdsejKXQm90fKfZJFbDYkYiGTQWvgU48wWFIlrVNxxgDDHLoD5oai8f5EMPQCUmFNkkl4r9V8bWt6WwKKD_jM59YaeVbBlW90twlZNqvtAcXufyzXhi9R6XTcN9HEIkBIWtu2ksQjjg3WYZV0e-dVex1--lvVqxdaKupAHWyw";
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+ token
-      }
       let userId = this.createBookingId();
       let booking = "booking";
       const postPromise = axios.post(`${url}/${booking}`, {

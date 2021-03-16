@@ -11,11 +11,21 @@
 /* eslint-disable no-unused-vars*/ 
 export default {
   name: 'callback',
-  mounted() {
-    this.$auth.handleAuthentication().then((data) => {
-      this.$router.push({ name: 'home' });
-      console.log("I ROUTED TO HOME!")
-    })
+ components: {
+
+  },
+
+  data() {
+    return {
+        
+    }
+  }, 
+  methods: {
+      created() {
+        //   console.log("TOKEN",this.$route.params.token)
+        console.log("I WORK, callback");
+
+      }
   }
 }
 </script>

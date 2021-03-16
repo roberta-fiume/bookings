@@ -162,7 +162,8 @@ export default {
         this.calendarOptions.events = [... apiEvents];
       })
       .catch(error => {
-        console.log("this is the error",error);
+        console.log("this is the error", error);
+        alert("THERE SOMETHING WRONG  WITH YOUR REQUEST. PLEASE TRY AGAIN", error.status);
       });
 
     },

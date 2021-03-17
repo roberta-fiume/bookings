@@ -48,6 +48,7 @@
   </div>
 </template>
 
+
 <script>
 /* eslint-disable no-unused-vars*/ 
 import FullCalendar from '@fullcalendar/vue'

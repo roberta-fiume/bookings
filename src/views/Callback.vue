@@ -13,7 +13,11 @@
 <script>
 /* eslint-disable no-unused-vars*/ 
 
+import querystring from "querystring";
+
 import auth0 from 'auth0-js'
+
+
 
 let webAuth = new auth0.WebAuth({
     domain: 'dev-23ynikm5.eu.auth0.com',
@@ -39,6 +43,23 @@ export default {
         //   console.log("TOKEN",this.$route.params.token)
         console.log("I WORK, callback");
 
+    },
+
+    mounted() {
+            let hashValue = this.$route.hash;
+            if (!hashValue) {
+                this.$router.push("/"); //after valid login the #token comes back as a hash value no token means user didnt just login
+            } else {
+                try {
+                    let tokensString = hashValue.substring(1, hashValue.length); //remove the # in the string
+                    let parsedTokens = querystring.parse(tokensString);
+                    console.log("parsed token",parsedTokens)
+                    // this.$store.commit("account/update_auth_tokens", parsedTokens);
+                    // this.$router.push("/");
+                } catch (e) {
+                    this.$router.push("/");
+                }
+            }
     },
 
   methods: {

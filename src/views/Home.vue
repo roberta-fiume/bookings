@@ -31,6 +31,7 @@ let webAuth = new auth0.WebAuth({
     scope: 'openid' 
   })
 
+const axios = require('axios');
 
 export default {
   name: 'Home',
@@ -40,18 +41,16 @@ export default {
 
   data() {
     return {
-     isAuthenticated: false,
+
     }
   },
 
   methods: {
       login() {
         console.log("I WORK, LOGIN");
-        webAuth.authorize();
-        this.isAuthenticated = true;
+        webAuth.authorize();  
         // webAuth.loginWithRedirect();
       },
-      
   }
 }
 </script>

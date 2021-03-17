@@ -61,13 +61,16 @@ const axios = require('axios');
 
 const url = 'http://localhost:8080';
 
-const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTU5MTY2NTUsImV4cCI6MTYxNjAwMzA1NSwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.xmi-R07x8BjKv57x3bzprJHrbNcO03xs_rdOJ0zAh50zvZgxbIU9uUbUt5Ky4q1sabOcSs--lSE8lEBTSlVr1rB20fCyt-CO--DmUl2L7VY42wRNivqr60zryRr5kXBNlhRdkUrEqDWmPc-aA06hSigC7otSHoV35aodnZLZZFqihSX7VnIZ8Oi0UOezbNQDDdH9eooL6SKJ_fKd92gB6CeoOqqRJIrZJK6qn1zqM_5t3mHviXDAVgz1x5DHdoDuNz8j3duw8mndXdF_qermfIJo0XYDUf-rIDyZNxcMioyqCgZzYKtKaMZLVc85NlfNOWoOEp82Vrvj8k09K2PyDA';
+const token = "";
 
-const headers = {
+// const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTU5MTY2NTUsImV4cCI6MTYxNjAwMzA1NSwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.xmi-R07x8BjKv57x3bzprJHrbNcO03xs_rdOJ0zAh50zvZgxbIU9uUbUt5Ky4q1sabOcSs--lSE8lEBTSlVr1rB20fCyt-CO--DmUl2L7VY42wRNivqr60zryRr5kXBNlhRdkUrEqDWmPc-aA06hSigC7otSHoV35aodnZLZZFqihSX7VnIZ8Oi0UOezbNQDDdH9eooL6SKJ_fKd92gB6CeoOqqRJIrZJK6qn1zqM_5t3mHviXDAVgz1x5DHdoDuNz8j3duw8mndXdF_qermfIJo0XYDUf-rIDyZNxcMioyqCgZzYKtKaMZLVc85NlfNOWoOEp82Vrvj8k09K2PyDA';
+
+let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '+ token
       }
 
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
 
@@ -111,6 +114,7 @@ export default {
       },
       currentEvents: [],
       bookingSlot: null,
+         
     }
   },
 
@@ -118,11 +122,32 @@ export default {
     // this.passToken();
      this.initiCalendar(INITIAL_EVENTS);
      this.url = url;
-     this.token = token;
+     this.token = this.tokenComputed;
+   
      this.headers = headers;
+      console.log("THIS IS THE TOKEN IN MOUNTED", this.tokenComputed);
+  },
+
+  mounted() {
+    console.log("THIS IS THE TOKEN IN MOUNTED", this.tokenComputed);
+  },
+
+  computed: {
+     tokenComputed: {
+            get() {
+                return this.accessToken
+            },
+            set(value) {
+                return this.updateToken(value);
+            }, 
+        },
+
+          ...mapGetters(['accessToken']),
   },
 
   methods: {
+
+    ...mapActions(['updateToken']),
 
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
@@ -154,6 +179,7 @@ export default {
 
     getBookings() {
       // let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com",
+      console.log("HEADERSSSSS", headers);
       axios.get(url, {
         headers: headers
       }).then(response => {

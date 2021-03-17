@@ -16,6 +16,12 @@ export default new Vuex.Store({
     idToken: state => state.idToken,
   },
 
+  actions: {
+    updateToken({ commit }, accessToken) {
+      commit('update_auth_tokens', accessToken);
+    },
+  },
+
   mutations: {
       update_auth_tokens(state, tokenData) {
           localStorage.setItem("access_token", tokenData.access_token);
@@ -31,7 +37,6 @@ export default new Vuex.Store({
           // localStorage.setItem("expires_in", tokensExpiry);
       }
   },
-  actions: {},
 
  
 })

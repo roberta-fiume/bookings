@@ -14,7 +14,6 @@
     <v-btn @click="login">
      Login
     </v-btn>
-
   </div>
 </template>
 
@@ -41,7 +40,7 @@ export default {
 
   data() {
     return {
-
+     isAuthenticated: false,
     }
   },
 
@@ -49,21 +48,10 @@ export default {
       login() {
         console.log("I WORK, LOGIN");
         webAuth.authorize();
+        this.isAuthenticated = true;
         // webAuth.loginWithRedirect();
       },
-      logout() {
-        console.log("I WORK, LOGOUT");
-        return new Promise((resolve, reject) => { 
-          localStorage.removeItem('access_token')
-          localStorage.removeItem('id_token')
-          localStorage.removeItem('expires_at')
-          localStorage.removeItem('user')
-          webAuth.logout({
-            returnTo: 'http://localhost:3000', // Allowed logout URL listed in dashboard
-            clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0', // Your client ID
-          })
-        })
-      }
+      
   }
 }
 </script>

@@ -27,7 +27,7 @@ let webAuth = new auth0.WebAuth({
     clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0',
     redirectUri: 'http://localhost:3000/callback',
     audience: 'https://dev-23ynikm5.eu.auth0.com/api/v2/', 
-    responseType: 'token',
+    responseType: 'token id_token',
     scope: 'openid' 
   })
 

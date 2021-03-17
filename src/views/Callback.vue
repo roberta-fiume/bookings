@@ -54,8 +54,7 @@ export default {
                     let tokensString = hashValue.substring(1, hashValue.length); //remove the # in the string
                     let parsedTokens = querystring.parse(tokensString);
                     console.log("parsed token",parsedTokens)
-                    // this.$store.commit("account/update_auth_tokens", parsedTokens);
-                    // this.$router.push("/");
+                    this.$store.commit("update_auth_tokens", parsedTokens);
                 } catch (e) {
                     this.$router.push("/");
                 }

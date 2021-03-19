@@ -64,9 +64,7 @@ const axios = require('axios');
 
 const url = 'http://localhost:8080';
 
-
 // const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTYwNzkxNjIsImV4cCI6MTYxNjE2NTU2MiwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.ikZ6xDwFHLk0b_XI3IdQJ7E6BZOLpP1YhJdgsIFZY1F4MAV0ZykIvT0kipjWviFUNJJuaX6AhLqqzEs163UVmlAg-irE2z_bPe5-Da-c38JWQyCqw682XbmzzmPwr_xuEPquzU9tu8OJQSUI84hPd93eJzGTdsWVbqioSs22RQOS604-siFg55mwkKTHWUJa_AYidIQIS99OJzQShMa9bHdCsWau6h4cgBztcRzD-Lg53BSgI_B9qhynhwP4dJe72Ntn5Q4nYAbt65hQytG2jLQyFjNmtl7R3gBshHy3Y5_paRpYFXPaI_vh_UGgeLN58HZesRG6oV5g24qAM9Th6Q";
-
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
@@ -135,7 +133,7 @@ export default {
 
   methods: {
 
-    // ...mapActions(['updateToken']),
+    ...mapActions(['login', 'logout']),
 
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property

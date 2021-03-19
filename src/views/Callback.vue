@@ -29,7 +29,7 @@ let webAuth = new auth0.WebAuth({
     domain: 'dev-23ynikm5.eu.auth0.com',
     clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0',
     redirectUri: 'http://localhost:3000/callback',
-    aud: 'https://supermarket.com', 
+    audience: 'https://supermarket.com', 
     responseType: 'token id_token',
     scope: 'openid profile' 
   })
@@ -55,6 +55,7 @@ export default {
       this.storeToken();
     },
 
+ 
   methods: {
       logout() {
         console.log("I WORK, LOGOUT");
@@ -67,19 +68,34 @@ export default {
       },
 
       storeToken() {
-        webAuth.parseHash((err, authResult) => {
-        if(authResult) {
-        window.location.hash = '';
-        let token = authResult.accessToken;
-        this.$store.commit("update_auth_tokens", token);
-        console.log("this is the tokennnnn!!!!!",token);
-        } else if (err) {
-            console.log("ERROR", err)
-        }
-      });
-      }
+         let hashValue = this.$route.hash;
+          console.log("THIS IS HASH", this.$route.hash);
+          if (!hashValue) {
+              this.$router.push("/"); //after valid login the #token comes back as a hash value no token means user didnt just login
+          } else {
+              try {
+                  let tokensString = hashValue.substring(1, hashValue.length); //remove the # in the string
+                  let parsedTokens = querystring.parse(tokensString);
+                  console.log("parsed token",parsedTokens)
+                  this.$store.commit("update_auth_tokens", parsedTokens);
+              } catch (e) {
+                  this.$router.push("/");
+              }
+          }
+        },
 
 
+        //   webAuth.parseHash((err, authResult) => {
+        //   if(authResult) {
+        //   window.location.hash = '';
+        //   let token = authResult.accessToken;
+        //   this.$store.commit("update_auth_tokens", token);
+        //   console.log("this is the tokennnnn!!!!!",token);
+        //   } else if (err) {
+        //       console.log("ERROR", err)
+        //   }
+        // });
+    
   }
 }
 </script>

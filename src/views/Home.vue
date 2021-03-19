@@ -8,10 +8,10 @@
      </span>
        My Account 
     </v-btn>
-    <v-btn v-if="!isAuthenticatated" @click="login">
+    <v-btn v-if="!isLoggedIn" @click="login">
      Login
     </v-btn> 
-    <v-btn v-else-if="isAuthenticatated" @click="logout">
+    <v-btn v-else @click="logout">
       Logout
     </v-btn>
     
@@ -34,6 +34,8 @@ let webAuth = new auth0.WebAuth({
 
 const axios = require('axios');
 
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+
 export default {
   name: 'Home',
   components: {
@@ -42,29 +44,36 @@ export default {
 
   data() {
     return {
-      isAuthenticatated: false,
+      // isAuthenticatated: false,
+    }
+  },
+
+  computed: {
+    isLoggedIn () {
+        return this.$store.state.isUserLoggedIn
     }
   },
 
   methods: {
-      login() {
-        console.log("I WORK, LOGIN");
-        webAuth.authorize();  
-     
-        // webAuth.loginWithRedirect();
-      },
+    login() {
+      console.log("I WORK, LOGIN");
+      webAuth.authorize(); 
+      this.$store.commit('setIsUserLoggedInToTrue'); 
+    
+      // webAuth.loginWithRedirect();
+    },
 
-      logout() {
-        console.log("I WORK, LOGOUT");
-        return new Promise((resolve, reject) => { 
-          webAuth.logout({
-            returnTo: 'http://localhost:3000', // Allowed logout URL listed in dashboard
-            clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0', // Your client ID
-          });
+    logout() {
+      console.log("I WORK, LOGOUT");
+      return new Promise((resolve, reject) => { 
+        webAuth.logout({
+          returnTo: 'http://localhost:3000', // Allowed logout URL listed in dashboard
+          clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0', // Your client ID
+        });
 
-          
-        })
-      },
+        this.$store.commit('setIsUserLoggedInToFalse');
+      })
+    },
   }
 }
 </script>

@@ -8,12 +8,13 @@
      </span>
        My Account 
     </v-btn>
-    <v-btn>
-      <router-link to="/bookslot" > Book delivery </router-link>
-    </v-btn>
-    <v-btn @click="login">
+    <v-btn v-if="!isAuthenticatated" @click="login">
      Login
+    </v-btn> 
+    <v-btn v-else-if="isAuthenticatated" @click="logout">
+      Logout
     </v-btn>
+    
   </div>
 </template>
 
@@ -26,9 +27,9 @@ let webAuth = new auth0.WebAuth({
     domain: 'dev-23ynikm5.eu.auth0.com',
     clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0',
     redirectUri: 'http://localhost:3000/callback',
-    audience: 'https://dev-23ynikm5.eu.auth0.com/api/v2/', 
+    audience: 'https://supermarket.com', 
     responseType: 'token id_token',
-    scope: 'openid' 
+    scope: 'openid profile' 
   })
 
 const axios = require('axios');
@@ -41,7 +42,7 @@ export default {
 
   data() {
     return {
-
+      isAuthenticatated: false,
     }
   },
 
@@ -49,7 +50,20 @@ export default {
       login() {
         console.log("I WORK, LOGIN");
         webAuth.authorize();  
+     
         // webAuth.loginWithRedirect();
+      },
+
+      logout() {
+        console.log("I WORK, LOGOUT");
+        return new Promise((resolve, reject) => { 
+          webAuth.logout({
+            returnTo: 'http://localhost:3000', // Allowed logout URL listed in dashboard
+            clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0', // Your client ID
+          });
+
+          
+        })
       },
   }
 }

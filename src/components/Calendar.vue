@@ -34,6 +34,9 @@
       <v-btn>
           <router-link to="/"> Home </router-link>
       </v-btn>
+      <v-btn @click="logout">
+        Logout
+      </v-btn>
       <FullCalendar
         class='demo-app-calendar'
         :options='calendarOptions'
@@ -61,14 +64,9 @@ const axios = require('axios');
 
 const url = 'http://localhost:8080';
 
-const token = "";
 
-// const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTU5MTY2NTUsImV4cCI6MTYxNjAwMzA1NSwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.xmi-R07x8BjKv57x3bzprJHrbNcO03xs_rdOJ0zAh50zvZgxbIU9uUbUt5Ky4q1sabOcSs--lSE8lEBTSlVr1rB20fCyt-CO--DmUl2L7VY42wRNivqr60zryRr5kXBNlhRdkUrEqDWmPc-aA06hSigC7otSHoV35aodnZLZZFqihSX7VnIZ8Oi0UOezbNQDDdH9eooL6SKJ_fKd92gB6CeoOqqRJIrZJK6qn1zqM_5t3mHviXDAVgz1x5DHdoDuNz8j3duw8mndXdF_qermfIJo0XYDUf-rIDyZNxcMioyqCgZzYKtKaMZLVc85NlfNOWoOEp82Vrvj8k09K2PyDA';
+// const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTYwNzkxNjIsImV4cCI6MTYxNjE2NTU2MiwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.ikZ6xDwFHLk0b_XI3IdQJ7E6BZOLpP1YhJdgsIFZY1F4MAV0ZykIvT0kipjWviFUNJJuaX6AhLqqzEs163UVmlAg-irE2z_bPe5-Da-c38JWQyCqw682XbmzzmPwr_xuEPquzU9tu8OJQSUI84hPd93eJzGTdsWVbqioSs22RQOS604-siFg55mwkKTHWUJa_AYidIQIS99OJzQShMa9bHdCsWau6h4cgBztcRzD-Lg53BSgI_B9qhynhwP4dJe72Ntn5Q4nYAbt65hQytG2jLQyFjNmtl7R3gBshHy3Y5_paRpYFXPaI_vh_UGgeLN58HZesRG6oV5g24qAM9Th6Q";
 
-let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+ token
-      }
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
@@ -119,35 +117,25 @@ export default {
   },
 
   created() {
-    // this.passToken();
      this.initiCalendar(INITIAL_EVENTS);
      this.url = url;
-     this.token = this.tokenComputed;
-   
-     this.headers = headers;
-      console.log("THIS IS THE TOKEN IN MOUNTED", this.tokenComputed);
+    console.log("GETTERS IN COMPUTED", this.$store.getters.accessToken);
+      // this.token = token
   },
 
   mounted() {
-    console.log("THIS IS THE TOKEN IN MOUNTED", this.tokenComputed);
+    console.log("THIS IS THE TOKEN IN MOUNTED", this.token);
   },
 
   computed: {
-     tokenComputed: {
-            get() {
-                return this.accessToken
-            },
-            set(value) {
-                return this.updateToken(value);
-            }, 
-        },
-
-          ...mapGetters(['accessToken']),
+     token(){
+       return this.$store.getters.accessToken
+     },
   },
 
   methods: {
 
-    ...mapActions(['updateToken']),
+    // ...mapActions(['updateToken']),
 
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
@@ -179,6 +167,11 @@ export default {
 
     getBookings() {
       // let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com",
+       const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ this.token
+      }
+
       console.log("HEADERSSSSS", headers);
       axios.get(url, {
         headers: headers
@@ -190,7 +183,7 @@ export default {
       })
       .catch(error => {
         console.log("this is the error", error);
-        alert("THERE SOMETHING WRONG  WITH YOUR REQUEST. PLEASE TRY AGAIN", error.status);
+        // alert("THERE SOMETHING WRONG  WITH YOUR REQUEST. PLEASE TRY AGAIN", error.status);
       });
 
     },
@@ -210,6 +203,10 @@ export default {
     },
 
     createBooking(selectInfo) {
+        const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ this.token
+      }
       let userId = this.createBookingId();
       let booking = "booking";
       const postPromise = axios.post(`${url}/${booking}`, {

@@ -51,6 +51,10 @@ export default {
     }
   },
 
+  mounted() {
+    console.log("IS LOGGED IN HOME", this.isLoggedIn);
+  },
+
   computed: {
     isLoggedIn () {
         return this.$store.state.isUserLoggedIn

@@ -11,7 +11,7 @@ let webAuth = new auth0.WebAuth({
   redirectUri: 'http://localhost:3000/callback',
   audience: 'https://supermarket.com', 
   responseType: 'token id_token',
-  scope: 'openid profile email read:bookings' 
+  scope: 'openid profile email read:bookings write:bookings' 
 });
 /* eslint-disable no-unused-vars*/ 
 export default new Vuex.Store({
@@ -37,6 +37,8 @@ export default new Vuex.Store({
       console.log("I WORK, LOGIN");
       webAuth.authorize(); 
       commit('setIsUserLoggedInToTrue'); 
+      console.log("IS USER LOGGED IN WHEN LOGIN TRIGGERS STATE", this.state.isUserLoggedIn);
+      console.log("IS USER LOGGED IN WHEN LOGIN TRIGGERS GETTERS", this.getters.isUserLoggedIn)
     
       // webAuth.loginWithRedirect();
     },
@@ -49,6 +51,8 @@ export default new Vuex.Store({
           clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0', // Your client ID
         });
         commit('setIsUserLoggedInToFalse');
+        // console.log("IS USER LOGGED IN STATE", this.$store.state.isUserLoggedIn);
+        // console.log("IS USER LOGGED IN GETTERS", this.$store.getters.isUserLoggedIn)
       })
     },
   },

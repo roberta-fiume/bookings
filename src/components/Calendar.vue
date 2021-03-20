@@ -117,7 +117,7 @@ export default {
   created() {
      this.initiCalendar(INITIAL_EVENTS);
      this.url = url;
-    console.log("GETTERS IN COMPUTED", this.$store.getters.accessToken);
+      console.log("GETTERS IN COMPUTED", this.$store.getters.accessToken);
       // this.token = token
   },
 
@@ -241,7 +241,6 @@ export default {
     },
 
     handleEvents(events) {
-      console.log("eventsSet", events);
       this.currentEvents = events
     }
   }

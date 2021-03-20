@@ -41,6 +41,8 @@ name: 'callback',
 
   mounted() {
     this.storeToken();
+    // console.log("IS USER LOGGED IN STATE", this.$store.state.isUserLoggedIn )
+    console.log("IS USER LOGGED IN GETTERS CALLBACK", this.$store.getters.isUserLoggedIn)
   },
 
    methods: {

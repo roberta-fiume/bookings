@@ -11,7 +11,7 @@ let webAuth = new auth0.WebAuth({
   redirectUri: 'http://localhost:3000/callback',
   audience: 'https://supermarket.com', 
   responseType: 'token id_token',
-  scope: 'openid profile' 
+  scope: 'openid profile email read:bookings' 
 });
 /* eslint-disable no-unused-vars*/ 
 export default new Vuex.Store({

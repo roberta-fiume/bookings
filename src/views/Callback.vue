@@ -9,7 +9,7 @@
       </v-btn>
 
       <v-btn>
-      <router-link to="/bookslot" > Book delivery </router-link>
+      <router-link to="/bookslot"> Book delivery </router-link>
       </v-btn>
 
       <v-btn>
@@ -49,7 +49,6 @@ name: 'callback',
 
     storeToken() {
       let hashValue = this.$route.hash;
-      console.log("THIS IS HASH", this.$route.hash);
       if (!hashValue) {
           this.$router.push("/"); //after valid login the #token comes back as a hash value no token means user didnt just login
       } else {

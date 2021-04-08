@@ -64,7 +64,7 @@ export default new Vuex.Store({
       console.log("token in getters", this.getters.accessToken);
 
       localStorage.setItem("id_token", tokenData.id_token);
-      state.idToken = localStorage.getItem("id_token",tokenData.id_token);
+      state.idToken = localStorage.getItem("id_token");
     },
   },
 

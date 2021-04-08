@@ -2,7 +2,7 @@
 <template>
     <div>
       <div>
-          Welcome, you're logged in!
+          Welcome, {{decodedIdToken.nickname }}!
       </div>
       <v-btn @click="logout">
       Logout
@@ -25,11 +25,15 @@
 <script>
 /* eslint-disable no-unused-vars*/ 
 
+
 import querystring from "querystring";
 
-import auth0 from 'auth0-js'
+import auth0 from 'auth0-js';
+import jwt_decode from "jwt-decode";
 
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+
 
 export default {
 name: 'callback',
@@ -51,12 +55,23 @@ name: 'callback',
     token(){
       return this.$store.getters.accessToken;
     },
+    id_Token() {
+      return this.$store.getters.idToken;
+    },
+
+    decodedIdToken() {
+      return jwt_decode(this.id_Token);
+    }
   },
     
   mounted() {
      if (this.token) {
       this.isUserLoggedIn = true;
      }
+
+     
+     console.log("THIS IS THE DECONDED ID TOKEN",this.decodedIdToken);
+
   },
    methods: {
      ...mapActions(['logout']),

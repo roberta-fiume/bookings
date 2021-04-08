@@ -1,19 +1,31 @@
 <template>
   <div class="home">
-    <h1> Welcome to Markedona</h1>
-    <v-btn>
-     
-     <span class="material-icons">
-        account_circle
-     </span>
-       My Account 
-    </v-btn>
+   
 
-    <v-btn v-if="!isLoggedIn" @click="login">
-     Login
-    </v-btn> 
+     <div class="home__brand" >
+          <h1> Markedona</h1> 
+        </div>
 
-    <div class="offers" v-if="isLoggedIn">
+        <div class="home__buttons">
+      
+            <v-btn >
+              <router-link to="/register"> Register </router-link>
+            </v-btn>
+        
+            <v-btn class="home__buttons-login" v-if="!isUserLoggedIn" @click="login">
+                Log in
+            </v-btn> 
+         
+            <v-btn v-if="isUserLoggedIn" @click="logout">
+                Logout
+            </v-btn>
+        
+            <span class="material-icons home__buttons-shopping">
+                shopping_cart
+            </span>
+        </div> 
+
+    <div class="offers" v-if="isUserLoggedIn">
       <p>These offers are selected just for you:</p>
       <div>
         Fusilli pasta: £3
@@ -23,9 +35,9 @@
       </div>  
     </div>
 
-    <v-btn v-if="isLoggedIn" @click="logout">
-      Logout
-    </v-btn>
+   
+
+    <div> I AM LOGGED IN: {{ isUserLoggedIn }} </div>
     
   </div>
 </template>
@@ -42,22 +54,24 @@ import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
   name: 'Home',
   components: {
-
+    
   },
 
   data() {
     return {
-      // isAuthenticatated: false,
+      isUserLoggedIn: false,
     }
   },
 
   mounted() {
-    console.log("IS LOGGED IN HOME", this.isLoggedIn);
+     if (this.token) {
+      this.isUserLoggedIn = true;
+     }
   },
 
   computed: {
-    isLoggedIn () {
-        return this.$store.state.isUserLoggedIn
+    token(){
+      return this.$store.getters.accessToken;
     }
   },
 
@@ -68,6 +82,34 @@ export default {
 </script>
 
 <style lang='scss'>
+
+  .home {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 20px;
+
+        &__brand {
+            display: flex;
+            flex-direction: row; 
+            
+        }
+
+        &__buttons {
+            display: flex;
+            flex-direction: row; 
+
+            &-login {
+                margin-left: 30px;
+            }
+
+            &-shopping {
+                margin-top: 10px;
+                margin-right: 5px;
+                margin-left: 30px;
+            }
+        }
+    }
   .offers {
     height: 200px;
     border: 2px solid lightseagreen;

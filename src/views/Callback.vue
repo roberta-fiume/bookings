@@ -14,10 +14,14 @@
 
       <v-btn>
           <router-link to="/"> Home </router-link>
-      </v-btn>
-    </div>
+      </v-btn> 
+
+      <div> I AM LOGGED IN: {{ isUserLoggedIn }} </div>
+      
+  </div> 
 </template>
 
+    
 <script>
 /* eslint-disable no-unused-vars*/ 
 
@@ -35,18 +39,26 @@ name: 'callback',
 
   data() {
     return {
-        
+      isUserLoggedIn: false,
     }
   }, 
 
-  mounted() {
+  created() {
     this.storeToken();
-    // console.log("IS USER LOGGED IN STATE", this.$store.state.isUserLoggedIn )
-    console.log("IS USER LOGGED IN GETTERS CALLBACK", this.$store.getters.isUserLoggedIn)
   },
 
+  computed: {
+    token(){
+      return this.$store.getters.accessToken;
+    },
+  },
+    
+  mounted() {
+     if (this.token) {
+      this.isUserLoggedIn = true;
+     }
+  },
    methods: {
-
      ...mapActions(['logout']),
 
     storeToken() {
@@ -64,6 +76,11 @@ name: 'callback',
           }
       }
     },
+
+    getTokenFromLocalStorage() {
+      const token = localStorage.getItem('access_token');
+      return token
+    }
 
         //   webAuth.parseHash((err, authResult) => {
         //   if(authResult) {

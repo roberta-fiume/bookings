@@ -34,6 +34,7 @@
       <v-btn>
           <router-link to="/"> Home </router-link>
       </v-btn>
+      <div> I AM LOGGED IN: {{ isUserLoggedIn }} </div>
       <v-btn @click="logout">
         Logout
       </v-btn>
@@ -110,24 +111,25 @@ export default {
       },
       currentEvents: [],
       bookingSlot: null,
+      isUserLoggedIn: false,
          
     }
   },
 
   created() {
-     this.initiCalendar(INITIAL_EVENTS);
-     this.url = url;
-      console.log("GETTERS IN COMPUTED", this.$store.getters.accessToken);
-      // this.token = token
+    this.initiCalendar(INITIAL_EVENTS);
+    this.url = url;
   },
 
   mounted() {
-    console.log("THIS IS THE TOKEN IN MOUNTED", this.token);
+      if (this.token) {
+        this.isUserLoggedIn = true;
+     }
   },
 
   computed: {
      token(){
-       return this.$store.getters.accessToken
+       return this.$store.getters.accessToken;
      },
   },
 

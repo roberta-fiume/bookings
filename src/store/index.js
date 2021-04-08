@@ -1,7 +1,11 @@
+
+/* eslint-disable no-unused-vars*/ 
 import Vue from 'vue'
 import Vuex from 'vuex'
 
 import auth0 from 'auth0-js'
+
+import router from '../router'
 
 Vue.use(Vuex)
 
@@ -13,19 +17,18 @@ let webAuth = new auth0.WebAuth({
   responseType: 'token id_token',
   scope: 'openid profile email read:bookings write:bookings' 
 });
-/* eslint-disable no-unused-vars*/ 
+
 export default new Vuex.Store({
   state: {
     idToken: "",
     accessToken: "",
     tokensExpiry: "",
-    isUserLoggedIn: false,
   },
 
   getters: {
     accessToken: state => state.accessToken,
     idToken: state => state.idToken,
-    isUserLoggedIn: state => state.isUserLoggedIn,
+    getIsUserLoggedIn: state => state.isUserLoggedIn,
   },
 
   actions: {
@@ -33,26 +36,21 @@ export default new Vuex.Store({
       commit('update_auth_tokens', accessToken);
     },
 
-    login({ commit }) {
+    login({ commit, dispatch }) {
       console.log("I WORK, LOGIN");
+     
       webAuth.authorize(); 
-      commit('setIsUserLoggedInToTrue'); 
-      console.log("IS USER LOGGED IN WHEN LOGIN TRIGGERS STATE", this.state.isUserLoggedIn);
-      console.log("IS USER LOGGED IN WHEN LOGIN TRIGGERS GETTERS", this.getters.isUserLoggedIn)
-    
-      // webAuth.loginWithRedirect();
     },
 
-    logout({ commit }) {
+    logout({ commit, dispatch }) {
       console.log("I WORK, LOGOUT");
       return new Promise((resolve, reject) => { 
         webAuth.logout({
           returnTo: 'http://localhost:3000', // Allowed logout URL listed in dashboard
           clientID: 'Gc9MRwY1bMvx1xkgaP9LsYLuvAOmPqZ0', // Your client ID
         });
-        commit('setIsUserLoggedInToFalse');
-        // console.log("IS USER LOGGED IN STATE", this.$store.state.isUserLoggedIn);
-        // console.log("IS USER LOGGED IN GETTERS", this.$store.getters.isUserLoggedIn)
+        localStorage.removeItem('access_token');
+        resolve();
       })
     },
   },
@@ -68,10 +66,6 @@ export default new Vuex.Store({
       localStorage.setItem("id_token", tokenData.id_token);
       state.idToken = localStorage.getItem("id_token",tokenData.id_token);
     },
-
-    setIsUserLoggedInToTrue: (state) => state.isUserLoggedIn = true,
-
-    setIsUserLoggedInToFalse: (state) => state.isUserLoggedIn = false,
   },
 
  

@@ -13,11 +13,15 @@
             </v-btn>
         
             <v-btn class="home__buttons-login" v-if="!isUserLoggedIn" @click="login">
-                Log in
+                Register / Log in
             </v-btn> 
          
             <v-btn v-if="isUserLoggedIn" @click="logout">
                 Logout
+            </v-btn>
+
+            <v-btn v-if="isUserLoggedIn">
+              <router-link to="/bookslot"> Book delivery </router-link>
             </v-btn>
         
             <span class="material-icons home__buttons-shopping">

@@ -21,7 +21,7 @@
  
       </div>
       <div class='demo-app-sidebar-section'>
-        <h1>My orders</h1>
+        <h2>Hi {{ decodedIdToken.nickname }}, these are your current orders: </h2>
         <ul>
           <li v-for='event in currentEvents' :key='event.id'>
             <b>{{ event.startStr }}</b>
@@ -55,11 +55,12 @@
 
 <script>
 /* eslint-disable no-unused-vars*/ 
-import FullCalendar from '@fullcalendar/vue'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS, createEventId } from '../event-utils'
+import FullCalendar from '@fullcalendar/vue';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { INITIAL_EVENTS, createEventId } from '../event-utils';
+import jwt_decode from "jwt-decode";
 
 const axios = require('axios');
 
@@ -128,9 +129,15 @@ export default {
   },
 
   computed: {
-     token(){
-       return this.$store.getters.accessToken;
-     },
+    token(){
+      return this.$store.getters.accessToken;
+    },
+    id_Token() {
+      return this.$store.getters.idToken;
+    },
+    decodedIdToken() {
+      return jwt_decode(this.id_Token);
+    }
   },
 
   methods: {
@@ -165,6 +172,8 @@ export default {
       this.getBookings();
     },
 
+    
+    // Edit get request to retrieve ONLY THE BOOKINGS of the logged in user 
     getBookings() {
       // let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com",
        const headers = {
@@ -207,7 +216,7 @@ export default {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '+ this.token
       }
-      let userId = this.createBookingId();
+      let userId = this.createBookingId(); // needs to be edited: the userId needs to be the ID of the logged in user
       let booking = "booking";
       const postPromise = axios.post(`${url}/${booking}`, {
         user_id: userId,
@@ -226,6 +235,8 @@ export default {
 
       return postPromise;
     },
+
+    // post request to send user details to back end 
 
     handleEventClick(clickInfo) { 
       console.log("THIS IS CLICK INFO", clickInfo); 

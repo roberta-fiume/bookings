@@ -34,6 +34,8 @@ import jwt_decode from "jwt-decode";
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 
+const axios = require('axios');
+
 
 export default {
 name: 'callback',
@@ -55,12 +57,13 @@ name: 'callback',
     token(){
       return this.$store.getters.accessToken;
     },
-    id_Token() {
-      return this.$store.getters.idToken;
+ 
+    decodedToken() {
+      return jwt_decode(this.token);
     },
 
     decodedIdToken() {
-      return jwt_decode(this.id_Token);
+      return this.$store.getters.getDecodedIdToken;
     }
   },
     
@@ -69,12 +72,22 @@ name: 'callback',
       this.isUserLoggedIn = true;
      }
 
-     
-     console.log("THIS IS THE DECONDED ID TOKEN",this.decodedIdToken);
+     console.log("THIS IS TOKEN", this.token);
+
+      this.$store.dispatch('decodeIdToken');
+
+     console.log("DECODED TOKEN", this.decodedIdToken);
+   
+      //  this.getUserInfo();
+
+
+     const userId = this.removeStringFromUserId();
+
+     console.log("USER ID", userId);
 
   },
    methods: {
-     ...mapActions(['logout']),
+     ...mapActions(['logout', 'decodeIdToken']),
 
     storeToken() {
       let hashValue = this.$route.hash;
@@ -90,6 +103,32 @@ name: 'callback',
               this.$router.push("/");
           }
       }
+    },
+
+    removeStringFromUserId() {
+       const userIdFullString = this.decodedIdToken.sub;
+
+       const userId = userIdFullString.replace("auth0|","");
+       
+       return userId;
+    },
+ 
+    getUserInfo() {
+      let url = "https://dev-23ynikm5.eu.auth0.com/userinfo"
+       const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ this.token
+      }
+
+      console.log("HEADERSSSSS", headers);
+      axios.get(url, {
+        headers: headers
+      }).then(response => {
+        console.log("USER INFOO", response)
+      })
+      .catch(error => {
+        console.log("this is the error", error);
+      });
     },
 
     getTokenFromLocalStorage() {

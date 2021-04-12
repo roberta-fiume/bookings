@@ -7,6 +7,11 @@ import auth0 from 'auth0-js'
 
 import router from '../router'
 
+const axios = require('axios');
+
+import jwt_decode from "jwt-decode";
+
+
 Vue.use(Vuex)
 
 let webAuth = new auth0.WebAuth({
@@ -15,20 +20,26 @@ let webAuth = new auth0.WebAuth({
   redirectUri: 'http://localhost:3000/callback',
   audience: 'https://supermarket.com', 
   responseType: 'token id_token',
-  scope: 'openid profile email read:bookings write:bookings' 
+  scope: 'openid profile email read:bookings write:bookings read:users read:user_idp_tokens' 
 });
 
 export default new Vuex.Store({
   state: {
     idToken: "",
     accessToken: "",
+    userId : "",
+    decodedIdToken: {},
     tokensExpiry: "",
+    
   },
 
   getters: {
     accessToken: state => state.accessToken,
     idToken: state => state.idToken,
     getIsUserLoggedIn: state => state.isUserLoggedIn,
+    getDecodedIdToken: state => state.decodedIdToken,
+    getUserId: state => state.userId,
+
   },
 
   actions: {
@@ -38,8 +49,7 @@ export default new Vuex.Store({
 
     login({ commit, dispatch }) {
       console.log("I WORK, LOGIN");
-     
-      webAuth.authorize(); 
+           webAuth.authorize(); 
     },
 
     logout({ commit, dispatch }) {
@@ -53,6 +63,11 @@ export default new Vuex.Store({
         resolve();
       })
     },
+
+    decodeIdToken({ commit, dispatch }) {
+      commit('decode_idToken');
+    },
+
   },
 
   mutations: {
@@ -66,6 +81,13 @@ export default new Vuex.Store({
       localStorage.setItem("id_token", tokenData.id_token);
       state.idToken = localStorage.getItem("id_token");
     },
+
+    decode_idToken(state) {
+   
+      state.decodedIdToken = jwt_decode(state.idToken);
+
+      console.log("ID TOKEN IN DECODE", this.getters.getDecodedIdToken);
+    }
   },
 
  

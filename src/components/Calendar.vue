@@ -21,7 +21,7 @@
  
       </div>
       <div class='demo-app-sidebar-section'>
-        <h2>Hi {{ decodedIdToken.nickname }}, these are your current orders: </h2>
+        <h2>Hi these are your current orders: </h2>
         <ul>
           <li v-for='event in currentEvents' :key='event.id'>
             <b>{{ event.startStr }}</b>
@@ -69,6 +69,7 @@ const url = 'http://localhost:8080';
 // const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTYwNzkxNjIsImV4cCI6MTYxNjE2NTU2MiwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.ikZ6xDwFHLk0b_XI3IdQJ7E6BZOLpP1YhJdgsIFZY1F4MAV0ZykIvT0kipjWviFUNJJuaX6AhLqqzEs163UVmlAg-irE2z_bPe5-Da-c38JWQyCqw682XbmzzmPwr_xuEPquzU9tu8OJQSUI84hPd93eJzGTdsWVbqioSs22RQOS604-siFg55mwkKTHWUJa_AYidIQIS99OJzQShMa9bHdCsWau6h4cgBztcRzD-Lg53BSgI_B9qhynhwP4dJe72Ntn5Q4nYAbt65hQytG2jLQyFjNmtl7R3gBshHy3Y5_paRpYFXPaI_vh_UGgeLN58HZesRG6oV5g24qAM9Th6Q";
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+
 
 export default {
 
@@ -126,23 +127,24 @@ export default {
       if (this.token) {
         this.isUserLoggedIn = true;
      }
+
+    this.$store.dispatch('getUserId');
+
+     console.log("USER ID", this.userId);
   },
 
   computed: {
     token(){
       return this.$store.getters.accessToken;
     },
-    id_Token() {
-      return this.$store.getters.idToken;
-    },
-    decodedIdToken() {
-      return jwt_decode(this.id_Token);
-    }
+
+    userId() {
+        return this.$store.getters.getUserId;
+      },
   },
 
   methods: {
-
-    ...mapActions(['login', 'logout']),
+    ...mapActions(['login', 'logout', 'getUserId']),
 
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
@@ -209,6 +211,16 @@ export default {
 
     createBookingId() {
       return Math.floor((Math.random() * 90000) + 10000);
+    }, 
+
+    // create other post request that sends name, email and ID number;
+
+    sendUserDetails() {
+      //   const headers = {
+      //   'Content-Type': 'application/json',
+      //   'Authorization': 'Bearer '+ this.token
+      // },
+
     },
 
     createBooking(selectInfo) {
@@ -216,7 +228,7 @@ export default {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '+ this.token
       }
-      let userId = this.createBookingId(); // needs to be edited: the userId needs to be the ID of the logged in user
+      let userId = this.createBookingId(); // needs to be edited: the userId needs to be the ID of the logged in user. Note: check if in database it's a number
       let booking = "booking";
       const postPromise = axios.post(`${url}/${booking}`, {
         user_id: userId,

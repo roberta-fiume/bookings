@@ -2,7 +2,7 @@
 <template>
     <div>
       <div>
-          Welcome, {{decodedIdToken.nickname }}!
+          Welcome, {{ name }}!
       </div>
       <v-btn @click="logout">
       Logout
@@ -62,32 +62,37 @@ name: 'callback',
       return jwt_decode(this.token);
     },
 
-    decodedIdToken() {
-      return this.$store.getters.getDecodedIdToken;
+    name() {
+      return this.$store.getters.getDecodedIdToken.name;
     }
+
+
+    // name() {
+    //   return this.decodedIdToken.given_name ? this.decodedIdToken.given_name : this.decodedIdToken.name;
+    // }
   },
     
   mounted() {
      if (this.token) {
       this.isUserLoggedIn = true;
+     } else {
+       this.$router.push("/");
      }
 
      console.log("THIS IS TOKEN", this.token);
 
-      this.$store.dispatch('decodeIdToken');
-
-     console.log("DECODED TOKEN", this.decodedIdToken);
+ 
    
       //  this.getUserInfo();
 
 
-     const userId = this.removeStringFromUserId();
+    //  const userId = this.removeStringFromUserId();
 
-     console.log("USER ID", userId);
+    //  console.log("USER ID", userId);
 
   },
    methods: {
-     ...mapActions(['logout', 'decodeIdToken']),
+     ...mapActions(['logout']),
 
     storeToken() {
       let hashValue = this.$route.hash;
@@ -105,13 +110,13 @@ name: 'callback',
       }
     },
 
-    removeStringFromUserId() {
-       const userIdFullString = this.decodedIdToken.sub;
+    // removeStringFromUserId() {
+    //    const userIdFullString = this.decodedIdToken.sub;
 
-       const userId = userIdFullString.replace("auth0|","");
+    //    const userId = userIdFullString.replace("auth0|","");
        
-       return userId;
-    },
+    //    return userId;
+    // },
  
     getUserInfo() {
       let url = "https://dev-23ynikm5.eu.auth0.com/userinfo"

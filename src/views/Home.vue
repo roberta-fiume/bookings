@@ -7,26 +7,21 @@
         </div>
 
         <div class="home__buttons">
-      
-            <v-btn >
-              <router-link to="/register"> Register </router-link>
-            </v-btn>
+          <v-btn class="home__buttons-login" v-if="!isUserLoggedIn" @click="login">
+              Register / Log in
+          </v-btn> 
         
-            <v-btn class="home__buttons-login" v-if="!isUserLoggedIn" @click="login">
-                Register / Log in
-            </v-btn> 
-         
-            <v-btn v-if="isUserLoggedIn" @click="logout">
-                Logout
-            </v-btn>
+          <v-btn v-if="isUserLoggedIn" @click="logout">
+              Logout
+          </v-btn>
 
-            <v-btn v-if="isUserLoggedIn">
-              <router-link to="/bookslot"> Book delivery </router-link>
-            </v-btn>
-        
-            <span class="material-icons home__buttons-shopping">
-                shopping_cart
-            </span>
+          <v-btn v-if="isUserLoggedIn">
+            <router-link to="/bookslot"> Book delivery </router-link>
+          </v-btn>
+      
+          <span class="material-icons home__buttons-shopping">
+              shopping_cart
+          </span>
         </div> 
 
     <div class="offers" v-if="isUserLoggedIn">

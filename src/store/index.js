@@ -68,6 +68,10 @@ export default new Vuex.Store({
       commit('take_userId');
     },
 
+    decodeIdToken({ commit, dispatch }) {
+      commit('decode_IdToken');
+    },
+
   },
 
   mutations: {
@@ -82,22 +86,19 @@ export default new Vuex.Store({
       state.idToken = localStorage.getItem("id_token");
     },
 
-    // make a mutation that decodes the id token and dispatch it in callback component 
+    // make a mutation that decodes the id token and dispatch it through the action in callback component 
+
+    decode_IdToken(state) {
+      state.decodedIdToken = jwt_decode(state.idToken);
+    },
 
     take_userId(state) {
    
-      state.decodedIdToken = jwt_decode(state.idToken);
-
       const fullUserId = this.getters.getDecodedIdToken.sub;
 
       state.userId = fullUserId.replace("auth0|","");
 
       console.log("USER ID IN STORE", this.getters.getUserId);
-
-
-
-      //make it also take the user id 
-
       
     }
   },

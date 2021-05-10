@@ -5,8 +5,6 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import BookSlot from '../views/BookSlot.vue'
 import Callback from '../views/Callback.vue'
-import Register from '../views/Register.vue'
-
 import store from '../store/index.js'
 
 Vue.use(VueRouter)
@@ -37,13 +35,6 @@ const routes = [
     },
     component: Callback
   },
-
-  {
-    path: '/register',
-    name: 'register',
-    component: Register
-  },
-
   // { path: '*', redirect: '/' }
 ]
 

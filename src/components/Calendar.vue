@@ -21,7 +21,7 @@
  
       </div>
       <div class='demo-app-sidebar-section'>
-        <h2>Hi these are your current orders: </h2>
+        <h2>Hi {{ }}these are your current orders: </h2>
         <ul>
           <li v-for='event in currentEvents' :key='event.id'>
             <b>{{ event.startStr }}</b>
@@ -64,7 +64,8 @@ import jwt_decode from "jwt-decode";
 
 const axios = require('axios');
 
-const url = 'http://localhost:8080';
+const url = 'http://localhost:8080/getbookings';
+
 
 // const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTYwNzkxNjIsImV4cCI6MTYxNjE2NTU2MiwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.ikZ6xDwFHLk0b_XI3IdQJ7E6BZOLpP1YhJdgsIFZY1F4MAV0ZykIvT0kipjWviFUNJJuaX6AhLqqzEs163UVmlAg-irE2z_bPe5-Da-c38JWQyCqw682XbmzzmPwr_xuEPquzU9tu8OJQSUI84hPd93eJzGTdsWVbqioSs22RQOS604-siFg55mwkKTHWUJa_AYidIQIS99OJzQShMa9bHdCsWau6h4cgBztcRzD-Lg53BSgI_B9qhynhwP4dJe72Ntn5Q4nYAbt65hQytG2jLQyFjNmtl7R3gBshHy3Y5_paRpYFXPaI_vh_UGgeLN58HZesRG6oV5g24qAM9Th6Q";
 
@@ -119,8 +120,18 @@ export default {
   },
 
   created() {
+    this.$store.dispatch('getUserId'); 
+
     this.initiCalendar(INITIAL_EVENTS);
+
+   
     this.url = url;
+
+    console.log("TOKEN IN CREATED CALENDAR", this.token);
+
+    console.log("USER ID IN CREATED", this.userId);
+
+    console.log("URL!!!",`${url}/${this.userId}`);
   },
 
   mounted() {
@@ -130,7 +141,13 @@ export default {
 
     this.$store.dispatch('getUserId');
 
-     console.log("USER ID", this.userId);
+     console.log("USER ID IN MOUNTED", this.userId);
+
+     console.log("TOKEN IN MOUNTED CALENDAR", this.token);
+  },
+
+  updated() {
+    console.log("TOKEN IN MOUNTED UPDATED", this.token);
   },
 
   computed: {
@@ -139,8 +156,16 @@ export default {
     },
 
     userId() {
-        return this.$store.getters.getUserId;
-      },
+      return this.$store.getters.getUserId;
+    },
+
+    name() {
+      return this.$store.getters.getDecodedIdToken.name;
+    },
+
+    email() {
+      return this.$store.getters.getDecodedIdToken.email;
+    },
   },
 
   methods: {
@@ -184,11 +209,15 @@ export default {
       }
 
       console.log("HEADERSSSSS", headers);
-      axios.get(url, {
+      
+      axios.get(`${url}/${this.userId}`, {
         headers: headers
       }).then(response => {
         let bookings = response.data;
         console.log("RESPONSE", response.data);
+
+        bookings.forEach(booking => console.log( typeof booking.UserId ));
+       
         let apiEvents = bookings.map(booking => this.bookingToEvent(booking));
         this.calendarOptions.events = [... apiEvents];
       })
@@ -209,18 +238,35 @@ export default {
       return event;
     },
 
-    createBookingId() {
-      return Math.floor((Math.random() * 90000) + 10000);
-    }, 
+    // createBookingId() {
+    //   return Math.floor((Math.random() * 90000) + 10000);
+    // }, 
 
     // create other post request that sends name, email and ID number;
 
     sendUserDetails() {
-      //   const headers = {
-      //   'Content-Type': 'application/json',
-      //   'Authorization': 'Bearer '+ this.token
-      // },
+        const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ this.token
+      }
+      let user = "user";
+      const postPromise = axios.post(`${url}/${user}`, {
+        userId: this.userId,
+        name: this.name,
+        email: this.email
+      },
+      {
+        headers: headers
+      }
+      );
+      postPromise.then((response) => {
+        console.log(" this is the response",response);
+      })
+      .catch(error => {
+        console.log("this is the error",error);
+      });
 
+      return postPromise;
     },
 
     createBooking(selectInfo) {
@@ -228,10 +274,10 @@ export default {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '+ this.token
       }
-      let userId = this.createBookingId(); // needs to be edited: the userId needs to be the ID of the logged in user. Note: check if in database it's a number
+      // let userId = this.createBookingId(); // needs to be edited: the userId needs to be the ID of the logged in user. Note: check if in database it's a number
       let booking = "booking";
       const postPromise = axios.post(`${url}/${booking}`, {
-        user_id: userId,
+        userId: this.userId,
         date: selectInfo.start
       },
       {

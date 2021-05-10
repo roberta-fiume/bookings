@@ -63,7 +63,7 @@ name: 'callback',
     },
 
     name() {
-      return this.$store.getters.getDecodedIdToken.name;
+      return this.$store.getters.getDecodedIdToken.given_name ? this.$store.getters.getDecodedIdToken.given_name : this.$store.getters.getDecodedIdToken.name
     }
 
 
@@ -79,11 +79,14 @@ name: 'callback',
        this.$router.push("/");
      }
 
+      this.$store.dispatch('decodeIdToken');
+
      console.log("THIS IS TOKEN", this.token);
+
 
  
    
-      //  this.getUserInfo();
+       this.getUserInfo();
 
 
     //  const userId = this.removeStringFromUserId();
@@ -92,7 +95,7 @@ name: 'callback',
 
   },
    methods: {
-     ...mapActions(['logout']),
+     ...mapActions(['logout','decode_IdToken']),
 
     storeToken() {
       let hashValue = this.$route.hash;
@@ -119,6 +122,7 @@ name: 'callback',
     // },
  
     getUserInfo() {
+      console.log("I'M CALLED!!!");
       let url = "https://dev-23ynikm5.eu.auth0.com/userinfo"
        const headers = {
         'Content-Type': 'application/json',

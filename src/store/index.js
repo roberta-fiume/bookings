@@ -96,7 +96,7 @@ export default new Vuex.Store({
    
       const fullUserId = this.getters.getDecodedIdToken.sub;
 
-      state.userId = fullUserId.replace("auth0|","");
+      state.userId = fullUserId.split("|")[1];
 
       console.log("USER ID IN STORE", this.getters.getUserId);
       

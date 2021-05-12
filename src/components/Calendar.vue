@@ -2,14 +2,6 @@
   <div class='demo-app'>
     <div class='demo-app-sidebar'>
       <div class='demo-app-sidebar-section'>
-        <h2>Instructions</h2>
-        <ul>
-          <li>Select dates and you will be prompted to create a new event</li>
-          <li>Drag, drop, and resize events</li>
-          <li>Click an event to delete it</li>
-        </ul>
-      </div>
-      <div class='demo-app-sidebar-section'>
         <label>
           <input
             type='checkbox'
@@ -21,7 +13,8 @@
  
       </div>
       <div class='demo-app-sidebar-section'>
-        <h2>Hi {{ }}these are your current orders: </h2>
+        <h2 v-if="currentEvents.length">Hi {{ this.name }} these are your current orders: </h2>
+        <h2 v-else> You don't have any orders yet. </h2>
         <ul>
           <li v-for='event in currentEvents' :key='event.id'>
             <b>{{ event.startStr }}</b>
@@ -64,10 +57,7 @@ import jwt_decode from "jwt-decode";
 
 const axios = require('axios');
 
-const url = 'http://localhost:8080/getbookings';
-
-
-// const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlNpZURnVFZIeTVZYlJSejJsZXgzTCJ9.eyJpc3MiOiJodHRwczovL2Rldi0yM3luaWttNS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjA0OGZkNWM0YTAyYmIwMDY5MDhiYjk5IiwiYXVkIjoiaHR0cHM6Ly9zdXBlcm1hcmtldC5jb20iLCJpYXQiOjE2MTYwNzkxNjIsImV4cCI6MTYxNjE2NTU2MiwiYXpwIjoiRk1UOEJUNmQyMm5zaHhIM1RYNnhmUldiUFM3OVFKN2YiLCJzY29wZSI6InJlYWQ6Ym9va2luZ3Mgd3JpdGU6Ym9va2luZ3MiLCJndHkiOiJwYXNzd29yZCJ9.ikZ6xDwFHLk0b_XI3IdQJ7E6BZOLpP1YhJdgsIFZY1F4MAV0ZykIvT0kipjWviFUNJJuaX6AhLqqzEs163UVmlAg-irE2z_bPe5-Da-c38JWQyCqw682XbmzzmPwr_xuEPquzU9tu8OJQSUI84hPd93eJzGTdsWVbqioSs22RQOS604-siFg55mwkKTHWUJa_AYidIQIS99OJzQShMa9bHdCsWau6h4cgBztcRzD-Lg53BSgI_B9qhynhwP4dJe72Ntn5Q4nYAbt65hQytG2jLQyFjNmtl7R3gBshHy3Y5_paRpYFXPaI_vh_UGgeLN58HZesRG6oV5g24qAM9Th6Q";
+const url = 'http://localhost:8080';
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
@@ -124,14 +114,13 @@ export default {
 
     this.initiCalendar(INITIAL_EVENTS);
 
+    this.getUser();
+
    
     this.url = url;
 
-    console.log("TOKEN IN CREATED CALENDAR", this.token);
-
     console.log("USER ID IN CREATED", this.userId);
 
-    console.log("URL!!!",`${url}/${this.userId}`);
   },
 
   mounted() {
@@ -139,15 +128,7 @@ export default {
         this.isUserLoggedIn = true;
      }
 
-    this.$store.dispatch('getUserId');
-
-     console.log("USER ID IN MOUNTED", this.userId);
-
-     console.log("TOKEN IN MOUNTED CALENDAR", this.token);
-  },
-
-  updated() {
-    console.log("TOKEN IN MOUNTED UPDATED", this.token);
+    this.$store.dispatch('getUserId'); 
   },
 
   computed: {
@@ -199,8 +180,30 @@ export default {
       this.getBookings();
     },
 
-    
-    // Edit get request to retrieve ONLY THE BOOKINGS of the logged in user 
+    getUser() {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ this.token
+      }
+
+      let getUser = 'getUser';
+
+      axios.get(`${url}/${getUser}/${this.userId}`, {
+        headers: headers
+      }).then(response => {
+        let users = response.data;
+        console.log("USERS ARRAY", users);
+        if (!users.length) {
+          this.sendUserDetails();
+        }
+      })
+      .catch(error => {
+        console.log("this is the error in getting the user", error);
+      });
+
+
+    },
+
     getBookings() {
       // let url = "https://booking-ms-dot-roberta-dev.nw.r.appspot.com",
        const headers = {
@@ -208,9 +211,9 @@ export default {
         'Authorization': 'Bearer '+ this.token
       }
 
-      console.log("HEADERSSSSS", headers);
+      let getBookings = 'getbookings';
       
-      axios.get(`${url}/${this.userId}`, {
+      axios.get(`${url}/${getBookings}/${this.userId}`, {
         headers: headers
       }).then(response => {
         let bookings = response.data;
@@ -223,7 +226,6 @@ export default {
       })
       .catch(error => {
         console.log("this is the error", error);
-        // alert("THERE SOMETHING WRONG  WITH YOUR REQUEST. PLEASE TRY AGAIN", error.status);
       });
 
     },
@@ -237,13 +239,7 @@ export default {
       };
       return event;
     },
-
-    // createBookingId() {
-    //   return Math.floor((Math.random() * 90000) + 10000);
-    // }, 
-
-    // create other post request that sends name, email and ID number;
-
+  
     sendUserDetails() {
         const headers = {
         'Content-Type': 'application/json',
@@ -263,7 +259,7 @@ export default {
         console.log(" this is the response",response);
       })
       .catch(error => {
-        console.log("this is the error",error);
+        console.log("this is the error in posting a user",error);
       });
 
       return postPromise;
@@ -274,8 +270,9 @@ export default {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '+ this.token
       }
-      // let userId = this.createBookingId(); // needs to be edited: the userId needs to be the ID of the logged in user. Note: check if in database it's a number
+     
       let booking = "booking";
+      
       const postPromise = axios.post(`${url}/${booking}`, {
         userId: this.userId,
         date: selectInfo.start
@@ -288,7 +285,7 @@ export default {
         console.log(" this is the response",response);
       })
       .catch(error => {
-        console.log("this is the error",error);
+        console.log("this is the error in creating a booking",error);
       });
 
       return postPromise;

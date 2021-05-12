@@ -1,0 +1,19 @@
+.v-btn {
+    text-transform: none !important;
+    background-color: transparent !important;
+}
+
+.v-btn::before {
+    background-color: transparent;
+}
+
+.v-btn i:hover{
+    transform: scale(1.15);
+}
+
+.v-btn--is-elevated {
+    box-shadow: none !important;
+}
+
+
+

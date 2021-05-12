@@ -1,0 +1,7 @@
+@import "../styles/variables.scss";
+
+@mixin textProperties($setFontSize:10px) {
+    font-family: 'Itim', cursive;
+    font-size: $setFontSize;
+    color: $primary;
+}

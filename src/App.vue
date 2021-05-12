@@ -11,6 +11,7 @@
 
 // import BookSlot from "./views/BookSlot.vue"
 
+
 export default {
   name: 'App',
 

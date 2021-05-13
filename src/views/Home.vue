@@ -17,7 +17,7 @@
  
     <div class="home__buttons">
       <v-btn class="home__buttons-login" v-if="!isUserLoggedIn" @click="login">
-          Register / Log in
+          Register/Login
       </v-btn> 
     
       <v-btn v-if="isUserLoggedIn" @click="logout">
@@ -43,7 +43,7 @@
       </div>  
     </div>
 
-    <div> I AM LOGGED IN: {{ isUserLoggedIn }} </div>
+    <!-- <div> I AM LOGGED IN: {{ isUserLoggedIn }} </div> -->
     
   </div>
 </template>
@@ -91,8 +91,9 @@ export default {
 
 @import "../styles/variables.scss";
 @import "../styles/_queries.scss";
-@import "../styles/vuetify-classes.css";
+@import "../styles/vuetify-classes.scss";
 @import "../styles/mixins.scss";
+
 
 
   .home {
@@ -100,19 +101,18 @@ export default {
     margin-top: 20px;
 
     &__brand {
-        display: flex;
-        flex-direction: row; 
-        @include textProperties(15px);
-        
+      @include textProperties(15px);  
     }
 
     &__buttons {
-      display: flex;
-      flex-direction: row; 
+      @include flexProperties(row);
 
       &-login {
-          background-color: none !important;
+          color: $white !important;
           margin-left: 30px;
+          font-size: 18px;
+          font-weight: 400;
+          line-height: 1.5;
           @include textProperties(10px);
       }
 
@@ -120,6 +120,7 @@ export default {
           margin-top: 10px;
           margin-right: 5px;
           margin-left: 30px;
+          color: $primary
       }
     }
 
@@ -129,7 +130,7 @@ export default {
       color: $primary;
       width: 330px;
       height: 40px;
-      @include border(2px solid $primary);
+      @include borderProperties(2px solid $primary);
       @include flexProperties(row, space-between, center);
 
       &-empty {
@@ -150,6 +151,16 @@ export default {
         color: $white;
         margin-right: 7px;
       }
+
+     input::placeholder {
+        color: $primary;
+      }
+
+      &-input {
+        outline: none;
+      }
+
+      
     }
   }
   .offers {

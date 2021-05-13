@@ -1,6 +1,9 @@
+@import "../styles/variables.scss";
+
+
 .v-btn {
     text-transform: none !important;
-    background-color: transparent !important;
+    background-color: $primary !important;
 }
 
 .v-btn::before {

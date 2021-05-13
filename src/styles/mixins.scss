@@ -1,7 +1,8 @@
 @import "../styles/variables.scss";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 @mixin textProperties($setFontSize:10px) {
-    font-family: 'Itim', cursive;
+    font-family: 'Montserrat', sans-serif;
     font-size: $setFontSize;
     color: $primary;
 }
@@ -13,7 +14,7 @@
     align-items: $alignItems;
 }
 
-@mixin border($borderColor:2px solid $primary) {
+@mixin borderProperties($borderColor:2px solid $primary) {
     border: $borderColor;
     border-radius: 5px;
 }

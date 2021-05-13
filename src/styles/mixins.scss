@@ -4,6 +4,8 @@
 @mixin textProperties($setFontSize:10px) {
     font-family: 'Montserrat', sans-serif;
     font-size: $setFontSize;
+    font-weight: 400;
+    line-height: 1.5;
     color: $primary;
 }
 

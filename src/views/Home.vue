@@ -1,47 +1,51 @@
 <template>
   <div class="home">
-    <div class="home__brand" >
+
+    <div class="home__header">
+      <div class="home__header-brand" >
         <h1> Markedona</h1> 
-    </div>
+      </div>
 
-    <div class="home__search">
-      <input type="text" placeholder="Search.." class="home__search-input">
+      <div class="home__header-search">
+        <input type="text" placeholder="Search.." class="home__header-search-input">
 
-      <div class="home__search-wrapper">
-        <div class="home__search-empty">
+        <div class="home__header-search-wrapper">
+          <div class="home__header-search-empty">
+          </div>
+          <i class="fa fa-search home__header-search-icon "></i>
         </div>
-        <i class="fa fa-search home__search-icon "></i>
-      </div>
-   
-    </div>
- 
-    <div class="home__buttons">
-      <v-btn class="home__buttons-login" v-if="!isUserLoggedIn" @click="login">
-          Register/Login
-      </v-btn> 
     
-      <v-btn v-if="isUserLoggedIn" @click="logout">
-          Logout
-      </v-btn>
-
-      <v-btn v-if="isUserLoggedIn">
-        <router-link to="/bookslot"> Book delivery </router-link>
-      </v-btn>
-  
-      <span class="material-icons home__buttons-shopping">
-          shopping_cart
-      </span>
-    </div> 
-
-    <div class="offers" v-if="isUserLoggedIn">
-      <p>These offers are selected just for you:</p>
-      <div>
-        Fusilli pasta: £3
       </div>
-      <div>
-        Organic chicken thights: £5per kg
-      </div>  
+ 
+      <div class="home__header-buttons">
+        <v-btn class="home__header-buttons-login" v-if="!isUserLoggedIn" @click="login">
+            Register/Login
+        </v-btn> 
+      
+        <v-btn class="home__header-buttons-login" v-if="isUserLoggedIn" @click="logout">
+            Logout
+        </v-btn>
+
+        <v-btn class="home__header-buttons-book-delivery" v-if="isUserLoggedIn">
+          <router-link class="home__header-buttons-book-delivery-text" to="/bookslot"> Book delivery </router-link>
+        </v-btn>
+    
+        <span class="material-icons home__header-buttons-shopping">
+            shopping_cart
+        </span>
+      </div> 
     </div>
+
+
+      <div class="offers" v-if="isUserLoggedIn">
+        <p>These offers are selected just for you:</p>
+        <div>
+          Fusilli pasta: £3
+        </div>
+        <div>
+          Organic chicken thights: £5per kg
+        </div>  
+      </div>
 
     <!-- <div> I AM LOGGED IN: {{ isUserLoggedIn }} </div> -->
     
@@ -97,57 +101,40 @@ export default {
 
 
   .home {
-    @include flexProperties(row);
-    margin-top: 20px;
-
-    &__brand {
-      @include textProperties(15px);  
-    }
-
-    &__buttons {
+    &__header {
       @include flexProperties(row);
+      margin-top: 20px;
 
-      &-login {
-          color: $white !important;
-          margin-left: 30px;
-          font-size: 18px;
-          font-weight: 400;
-          line-height: 1.5;
-          @include textProperties(10px);
+
+      &-brand {
+        @include textProperties(15px);  
       }
 
-      &-shopping {
-          margin-top: 10px;
-          margin-right: 5px;
-          margin-left: 30px;
-          color: $primary
+      &-search {
+        padding-left: 10px;
+        padding-right: 10px;
+        color: $primary;
+        width: 330px;
+        height: 40px;
+        @include borderProperties(2px solid $primary);
+        @include flexProperties(row, space-between, center);
       }
-    }
 
-    &__search {
-      padding-left: 10px;
-      padding-right: 10px;
-      color: $primary;
-      width: 330px;
-      height: 40px;
-      @include borderProperties(2px solid $primary);
-      @include flexProperties(row, space-between, center);
-
-      &-empty {
+      &-search-empty {
         display: flex;
         border: 1px solid $primary;
         width: 1px;
         height: 40px
       }
 
-      &-wrapper {
+      &-search-wrapper {
         margin-right: -10px;
         width: 35px;
         background-color: $primary;
         @include flexProperties(row, space-between, center);
       }
 
-      &-icon {
+      &-search-icon {
         color: $white;
         margin-right: 7px;
       }
@@ -156,11 +143,38 @@ export default {
         color: $primary;
       }
 
-      &-input {
+      &-search-input {
         outline: none;
+      } 
+
+      &-buttons {
+        @include flexProperties(row);
       }
 
-      
+      &-buttons-login {
+        color: $white !important;
+        margin-left: 30px;
+        @include textProperties(16px);
+      }
+
+      &-buttons-book-delivery {
+        color: $white !important;
+        margin-left: 30px;
+        @include textProperties(15px);
+      }
+
+      &-buttons-book-delivery-text {
+        color: $white !important;
+        text-decoration: none;
+        @include textProperties(14px);
+      }
+
+      &-buttons-shopping {
+        margin-top: 10px;
+        margin-right: 5px;
+        margin-left: 30px;
+        color: $primary;
+      }
     }
   }
   .offers {

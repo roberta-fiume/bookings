@@ -5,3 +5,15 @@
     font-size: $setFontSize;
     color: $primary;
 }
+
+@mixin flexProperties($flexDirection:row, $justifyContent:space-around, $alignItems:center) {
+    display: flex;
+    flex-direction: $flexDirection;
+    justify-content: $justifyContent;
+    align-items: $alignItems;
+}
+
+@mixin border($borderColor:2px solid $primary) {
+    border: $borderColor;
+    border-radius: 5px;
+}

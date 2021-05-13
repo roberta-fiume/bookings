@@ -1,10 +1,30 @@
+ // primary: #640050 #640050 P-light: #b181a7 (for hovering on darker color); Font color for text: #fff; font-family: "Montserrat",sans-serif;
+   // font-weight: 400;
+  // buttons properties: border-radius 5px, 1px solid line height 1.5, font-size: .8888888889rem;
+  //   font-weight: 400;  FOR ICONS COLOR ON WHITE BACKGROUND: #640050;
+
+  // secondary: 1 GRADIENT background-color: rgba(0,170,170,0.5);
+  //secondary: 2 GRADIENT     background: linear-gradient(
+                               // 135deg
+                               // , #640050 -50%, #0aa 150%);
+
+  // secondary 3 GRADIENT     background: linear-gradient(
+                              //135deg
+                              //, #0aa -50%, #640050 150%);
+//  secondary: #007cba; color for font on white background and for border button and text inside button on white background: #0aa. This color is also used for background color for button on primary color background; S-light: background-color: rgba(0,170,170,0.1); S-Dark: #007cba; color for titles on white background: #324b5a;
 
 
+$primary: #640050;
+$primary-light: #b181a7;
 
-$primary: #7e57c2;
-$primary-light: #b085f5;
-$primary-dark: #4d2c91;
+$secondary: #0aa;
+$secondary-dark: #007cba;
+// $secondary-second: #4db6ac;
 
-$secondary: #4db6ac;
-$secondary-light: #82e9de;
-$secondary-dark: #00867d;
+$secondary-light: rgba(0,170,170,0.1);
+$secondary-dark: #007cba;
+$secondary-dark-title: #324b5a; //used with font-weight: 700;
+// $secondary-light2: #82e9de;
+// $secondary-dark: #00867d;
+
+$white: #fff;

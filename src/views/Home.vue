@@ -5,10 +5,16 @@
     </div>
 
     <div class="home__search">
-        <input type="text" placeholder="Search.."> 
-        <i class="fa fa-search home__search-icon "></i>
-    </div>
+      <input type="text" placeholder="Search.." class="home__search-input">
 
+      <div class="home__search-wrapper">
+        <div class="home__search-empty">
+        </div>
+        <i class="fa fa-search home__search-icon "></i>
+      </div>
+   
+    </div>
+ 
     <div class="home__buttons">
       <v-btn class="home__buttons-login" v-if="!isUserLoggedIn" @click="login">
           Register / Log in
@@ -90,9 +96,7 @@ export default {
 
 
   .home {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    @include flexProperties(row);
     margin-top: 20px;
 
     &__brand {
@@ -120,20 +124,40 @@ export default {
     }
 
     &__search {
-      display: flex;
-      width: 300px;
-      border: 2px solid #4d2c91;
-      border-radius: 7px;
-    }
+      padding-left: 10px;
+      padding-right: 10px;
+      color: $primary;
+      width: 330px;
+      height: 40px;
+      @include border(2px solid $primary);
+      @include flexProperties(row, space-between, center);
 
-        
+      &-empty {
+        display: flex;
+        border: 1px solid $primary;
+        width: 1px;
+        height: 40px
+      }
+
+      &-wrapper {
+        margin-right: -10px;
+        width: 35px;
+        background-color: $primary;
+        @include flexProperties(row, space-between, center);
+      }
+
+      &-icon {
+        color: $white;
+        margin-right: 7px;
+      }
     }
+  }
   .offers {
-    height: 200px;
+    height: 180px;
     border: 2px solid lightseagreen;
+    
   }
 
-  // primary: #7e57c2 P-light: #b085f5 P-Dark: #4d2c91
-  // secondary: #4db6ac S-light: #82e9de S-Dark: #00867d
+ 
 
 </style>

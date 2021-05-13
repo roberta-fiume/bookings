@@ -36,16 +36,15 @@
       </div> 
     </div>
 
-
-      <div class="offers" v-if="isUserLoggedIn">
-        <p>These offers are selected just for you:</p>
-        <div>
-          Fusilli pasta: £3
-        </div>
-        <div>
-          Organic chicken thights: £5per kg
-        </div>  
+    <div class="offers" v-if="isUserLoggedIn">
+      <p>These offers are selected just for you:</p>
+      <div>
+        Fusilli pasta: £3
       </div>
+      <div>
+        Organic chicken thights: £5per kg
+      </div>  
+    </div>
 
     <!-- <div> I AM LOGGED IN: {{ isUserLoggedIn }} </div> -->
     
@@ -111,11 +110,9 @@ export default {
       }
 
       &-search {
-        padding-left: 10px;
-        padding-right: 10px;
         color: $primary;
-        width: 330px;
-        height: 40px;
+        @include p-left-right(10px, 10px);
+        @include measures(330px, 40px);
         @include borderProperties(2px solid $primary);
         @include flexProperties(row, space-between, center);
       }
@@ -123,8 +120,7 @@ export default {
       &-search-empty {
         display: flex;
         border: 1px solid $primary;
-        width: 1px;
-        height: 40px
+        @include measures(1px, 40px);
       }
 
       &-search-wrapper {
@@ -171,8 +167,7 @@ export default {
 
       &-buttons-shopping {
         margin-top: 10px;
-        margin-right: 5px;
-        margin-left: 30px;
+        @include m-left-right(30px, 5px);
         color: $primary;
       }
     }

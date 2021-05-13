@@ -1,7 +1,7 @@
 @import "../styles/variables.scss";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
-@mixin textProperties($setFontSize:10px) {
+@mixin textProperties($setFontSize) {
     font-family: 'Montserrat', sans-serif;
     font-size: $setFontSize;
     font-weight: 400;
@@ -16,7 +16,22 @@
     align-items: $alignItems;
 }
 
-@mixin borderProperties($borderColor:2px solid $primary) {
+@mixin borderProperties($borderColor) {
     border: $borderColor;
     border-radius: 5px;
+}
+
+@mixin measures($width, $height) {
+    width: $width;
+    height: $height;
+}
+
+@mixin m-left-right($m-left, $m-right) {
+    margin-left: $m-left;
+    margin-right: $m-right;
+}
+
+@mixin p-left-right($p-left, $p-right) {
+    padding-left: $p-left;
+    padding-right: $p-right;
 }
